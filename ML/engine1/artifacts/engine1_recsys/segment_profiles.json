@@ -1,0 +1,96 @@
+{
+  "cluster_to_persona": {
+    "0": "family",
+    "1": "gig_worker",
+    "2": "farmer",
+    "3": "family",
+    "4": "student",
+    "5": "family"
+  },
+  "centroid_stats": {
+    "0": {
+      "age": 38.85,
+      "monthly_income": 45540.15,
+      "monthly_avg_balance": 13214.7,
+      "txn_count_30d": 19.52,
+      "avg_txn_amount": 1339.91,
+      "upi_txn_ratio": 0.65,
+      "emi_count_active": 3.26,
+      "salary_credit_regularity": 0.67,
+      "savings_rate": 0.21,
+      "festival_spend_spike": 0.43,
+      "tenure_months": 47.41
+    },
+    "1": {
+      "age": 34.76,
+      "monthly_income": 29572.58,
+      "monthly_avg_balance": 9939.0,
+      "txn_count_30d": 22.65,
+      "avg_txn_amount": 824.89,
+      "upi_txn_ratio": 0.56,
+      "emi_count_active": 0.99,
+      "salary_credit_regularity": 0.42,
+      "savings_rate": 0.17,
+      "festival_spend_spike": 0.61,
+      "tenure_months": 22.88
+    },
+    "2": {
+      "age": 42.62,
+      "monthly_income": 30019.24,
+      "monthly_avg_balance": 11427.09,
+      "txn_count_30d": 18.99,
+      "avg_txn_amount": 852.18,
+      "upi_txn_ratio": 0.61,
+      "emi_count_active": 1.02,
+      "salary_credit_regularity": 0.31,
+      "savings_rate": 0.17,
+      "festival_spend_spike": 0.5,
+      "tenure_months": 72.77
+    },
+    "3": {
+      "age": 38.72,
+      "monthly_income": 50545.99,
+      "monthly_avg_balance": 17011.89,
+      "txn_count_30d": 18.58,
+      "avg_txn_amount": 1407.7,
+      "upi_txn_ratio": 0.61,
+      "emi_count_active": 0.53,
+      "salary_credit_regularity": 0.76,
+      "savings_rate": 0.23,
+      "festival_spend_spike": 0.31,
+      "tenure_months": 53.47
+    },
+    "4": {
+      "age": 22.17,
+      "monthly_income": 12689.89,
+      "monthly_avg_balance": 4241.89,
+      "txn_count_30d": 19.68,
+      "avg_txn_amount": 330.22,
+      "upi_txn_ratio": 0.57,
+      "emi_count_active": 0.35,
+      "salary_credit_regularity": 0.34,
+      "savings_rate": 0.2,
+      "festival_spend_spike": 0.46,
+      "tenure_months": 46.7
+    },
+    "5": {
+      "age": 37.61,
+      "monthly_income": 56949.95,
+      "monthly_avg_balance": 23543.03,
+      "txn_count_30d": 19.59,
+      "avg_txn_amount": 2021.3,
+      "upi_txn_ratio": 0.49,
+      "emi_count_active": 0.91,
+      "salary_credit_regularity": 0.64,
+      "savings_rate": 0.16,
+      "festival_spend_spike": 0.61,
+      "tenure_months": 45.43
+    }
+  },
+  "metrics": {
+    "silhouette_test": 0.07564759364745796,
+    "davies_bouldin_test": 2.5581136402702063,
+    "calinski_harabasz_test": 10.931681336498716,
+    "stability_ari_mean": 0.4880063159521784
+  }
+}

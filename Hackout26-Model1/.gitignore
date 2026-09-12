@@ -1,0 +1,10 @@
+# Environments
+.venv/
+__pycache__/
+*.pyc
+
+# Data (Too large for GitHub)
+data/synthetic_customer_features*.csv
+data/batch_predictions*.csv
+data/synthetic_customers.csv
+data/synthetic_transactions.csv

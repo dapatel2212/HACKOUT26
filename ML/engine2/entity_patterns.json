@@ -1,0 +1,28 @@
+{
+  "AMOUNT": [
+    "(?:rs\\.?|inr|\u20b9)\\s?[\\d,]+",
+    "[\\d,]+\\s?(?:rupaye|rupees|rs)"
+  ],
+  "DATE": [
+    "agle\\s+mahine",
+    "\\d{1,2}\\s+tarikh",
+    "next\\s+month",
+    "is\\s+mahine"
+  ],
+  "PRODUCT": [
+    "\\bloan\\b",
+    "\\binsurance\\b",
+    "\\bfd\\b",
+    "\\bsip\\b",
+    "\\bkarza\\b",
+    "\\bbima\\b"
+  ],
+  "TENURE": [
+    "\\d+\\s?(?:mahine|saal|months?|years?)"
+  ],
+  "ACCOUNT_TYPE": [
+    "\\bsaving\\b",
+    "\\bcurrent\\b",
+    "\\bfd\\b"
+  ]
+}

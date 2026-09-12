@@ -1,0 +1,41 @@
+{
+  "model_name": "indic_bert_intent_classifier",
+  "version": "1.0.0",
+  "base_checkpoint": "google/muril-base-cased",
+  "training_date": "2026-09-12",
+  "dataset": {
+    "name": "Banking77 (remapped to 10 project intents) + Hindi/Hinglish seed set",
+    "source": "https://github.com/PolyAI-LDN/task-specific-datasets",
+    "n_train": 14093,
+    "n_val": 1315,
+    "n_test": 1315
+  },
+  "hyperparameters": {
+    "epochs": 15,
+    "lr": 2e-05,
+    "batch_size": 32,
+    "max_len": 64
+  },
+  "metrics": {
+    "validation": {
+      "accuracy": 0.9277566539923955,
+      "macro_f1": 0.8347160420003765,
+      "weighted_f1": 0.927557869164953,
+      "macro_auc_ovr": 0.9760622521357192
+    },
+    "test": {
+      "accuracy": 0.9437262357414449,
+      "macro_f1": 0.845883051608358,
+      "weighted_f1": 0.9434266639183543,
+      "macro_auc_ovr": 0.9328543712945508
+    }
+  },
+  "framework_versions": {
+    "transformers": "5.16.1",
+    "torch": "2.11.0+cu128",
+    "python": "3.13.15"
+  },
+  "artifact_sha256": "293aed27c325bd2272b28db0e1164c8df861630e1d908eff787b5e500904a553",
+  "random_seed": 42,
+  "training_wall_clock_seconds": 3281.9182510375977
+}

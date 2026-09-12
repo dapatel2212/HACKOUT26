@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-indigo-900: #1a237e;
+  --color-saffron: #ff6f00;
+  --color-success: #2e7d32;
+  --color-warning: #ff8f00;
+  --color-danger: #c62828;
+  --color-bg-custom: #f5f7fb;
+  --color-navy-base: #050a1a;
+  --color-navy-card: #0d162b;
+  --color-navy-elevated: #111d35;
+  --color-slate-850: #111d35;
+}
+
+:root {
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  --bg-color: var(--color-bg-custom);
+  --text-color: #0f172a;
+}
+
+.dark {
+  --bg-color: #050a1a;
+  --text-color: #f8fafc;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Ensure dark cards and subtle borders are consistent */
+.dark .bg-slate-900 {
+  background-color: #0d162b !important;
+}
+
+.dark .border-slate-800 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .border-slate-700 {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark .bg-slate-800 {
+  background-color: #111d35 !important;
+}

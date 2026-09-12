@@ -1,0 +1,32 @@
+{
+  "model_name": "engine3_anomaly_stress_detection",
+  "version": "1.0.0",
+  "components": {
+    "isolation_forest": {
+      "dataset": "Kaggle mlg-ulb/creditcardfraud (real, 284807 rows, 492 frauds)",
+      "roc_auc": 0.9344614580010373,
+      "pr_auc": 0.027895687965752373,
+      "false_positive_rate": 0.013968477178180113,
+      "false_negative_rate": 0.5,
+      "artifact_sha256": "51ac299b3d564f62520ea4f6b98f46488019e8de683de137a3d79c7307b9526a"
+    },
+    "lstm_autoencoder": {
+      "dataset": "Synthetic per-customer sequence generator (500 customers, 6 segments, 6mo) -- required because creditcard.csv has no customer ID",
+      "roc_auc": 0.5944134333821376,
+      "pr_auc": 0.7117583005942796,
+      "drift_customers_detected": 80,
+      "drift_customers_total": 80,
+      "training_wall_clock_seconds": 13.445866346359253
+    },
+    "ethical_gate": {
+      "drift_customers_correctly_gated": 80,
+      "drift_customers_missed_false_negative": 0,
+      "false_positive_rate_on_normal_customers": 0.0
+    }
+  },
+  "framework_versions": {
+    "torch": "2.11.0+cu128",
+    "python": "3.13.15"
+  },
+  "random_seed": 42
+}

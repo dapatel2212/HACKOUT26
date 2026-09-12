@@ -1,0 +1,56 @@
+{
+  "artifact": "C:\\Dhairya\\Hackout_final\\Hackout26\\Hackout26-Model1\\models\\stress_lgbm_compatible.txt",
+  "data_source": "Hackout26-Model1\\data\\synthetic_customer_features.csv",
+  "label": "composite_stress_score",
+  "rows": 100000,
+  "train_rows": 80000,
+  "test_rows": 20000,
+  "features": [
+    "recency_days",
+    "frequency_monthly",
+    "monetary_monthly_spend",
+    "emi_burden_ratio",
+    "income_stability_cv",
+    "balance_volatility",
+    "balance_min_ratio",
+    "spending_velocity",
+    "emi_bounce_count",
+    "credit_utilization_ratio",
+    "num_loan_inquiries",
+    "anomaly_rate_30d",
+    "recon_error"
+  ],
+  "metrics": {
+    "mae": 4.708043650623219,
+    "rmse": 5.870270224848571,
+    "r2": 0.9424287415544588,
+    "band_accuracy": 0.9687,
+    "band_macro_f1": 0.4804842934095271,
+    "confusion_matrix": [
+      [
+        17265,
+        0,
+        0,
+        0
+      ],
+      [
+        313,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        313
+      ],
+      [
+        0,
+        0,
+        0,
+        2109
+      ]
+    ]
+  }
+}

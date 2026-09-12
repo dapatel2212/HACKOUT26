@@ -1,0 +1,41 @@
+# ==============================================================================
+# Hack Horizon - Hyper-Personalized Banking for Bharat
+# Requirements Specification based on Hack_Horizon_POV.pdf
+# ==============================================================================
+
+# --- 1. Core Data Processing & Synthetic Dataset Generation ---
+numpy>=1.26.0
+pandas>=2.2.0
+scipy>=1.12.0
+faker>=24.0.0
+python-dateutil>=2.9.0
+
+# --- 2. Engine 1: Hyper-Personalized Product Recommendations ---
+scikit-learn>=1.4.0        # K-Means, GMM clustering, TF-IDF, Cosine similarity
+xgboost>=2.0.0             # Learning-to-rank / Gradient-boosted decision trees
+lightgbm>=4.3.0            # Alternative fast GBDT ranker
+shap>=0.44.0               # Model explainability & "why am I seeing this" reasons
+
+# --- 3. Engine 2: Vernacular Conversational AI & NLP ---
+torch>=2.2.0               # Deep learning backend for transformers
+transformers>=4.38.0       # HuggingFace Transformers (IndicBERT, multilingual models)
+datasets>=2.17.0
+accelerate>=0.27.0
+fasttext-wheel>=0.9.2      # Fast language identification for code-mixed Hinglish
+
+# --- 4. Engine 3: Financial Stress & Anomaly Detection ---
+# (scikit-learn provides IsolationForest)
+statsmodels>=0.14.0        # EWMA / CUSUM for slow balance deterioration tracking
+
+# --- 5. Utilities & Serialization ---
+joblib>=1.3.0              # Model artifact serialization (.joblib / .pkl)
+pydantic>=2.6.0            # Schema validation
+tqdm>=4.66.0               # Progress bars for synthetic data & training
+
+# --- 6. Backend API & WebSockets (Section 8 of POV) ---
+django>=5.0.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.3.0
+channels>=4.0.0            # WebSockets for real-time chatbot
+channels-redis>=4.2.0
+pymongo>=4.6.0             # MongoDB Atlas integration

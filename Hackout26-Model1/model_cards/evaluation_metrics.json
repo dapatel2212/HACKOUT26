@@ -1,0 +1,43 @@
+{
+  "project": "Hack Horizon - AI Powered Hyper-Personalized Banking",
+  "generated_at": "2026-09-12T10:52:00+05:30",
+  "models": {
+    "segmentation": {
+      "algorithm": "K-Means on PCA(15)",
+      "num_clusters": 6,
+      "silhouette_score": 0.386,
+      "davies_bouldin_index": 0.812,
+      "explained_variance_ratio_pca15": 0.894
+    },
+    "recommendation_ranker": {
+      "algorithm": "XGBRanker (rank:pairwise)",
+      "ndcg_at_5": 0.892,
+      "ndcg_at_3": 0.865,
+      "precision_at_3": 0.841,
+      "mrr": 0.914,
+      "catalog_coverage": 1.00
+    },
+    "propensity_fallback": {
+      "algorithm": "Logistic Regression",
+      "roc_auc": 0.884,
+      "f1_score": 0.821,
+      "accuracy": 0.835
+    },
+    "stress_detection": {
+      "lightgbm_regressor": {
+        "mae": 3.12,
+        "rmse": 4.25,
+        "r2_score": 0.941
+      },
+      "isolation_forest": {
+        "contamination": 0.02,
+        "anomalies_detected": 10
+      },
+      "lstm_autoencoder": {
+        "val_mse_loss": 0.048,
+        "epochs": 50,
+        "batch_size": 64
+      }
+    }
+  }
+}

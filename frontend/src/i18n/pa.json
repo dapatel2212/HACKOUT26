@@ -1,0 +1,95 @@
+{
+  "app": {
+    "name": "ਬੈਂਕਬੱਡੀ (BankBuddy)",
+    "tagline": "ਭਾਰਤ ਲਈ AI-ਸੰਚਾਲਿਤ ਨਿੱਜੀ ਬੈਂਕਿੰਗ"
+  },
+  "nav": {
+    "dashboard": "ਡੈਸ਼ਬੋਰਡ",
+    "money": "ਮੇਰਾ ਪੈਸਾ",
+    "recommendations": "ਸਿਫਾਰਸ਼ਾਂ",
+    "loans": "ਕਰਜ਼ੇ ਅਤੇ ਕ੍ਰੈਡਿਟ",
+    "wellness": "ਵਿੱਤੀ ਸਿਹਤ",
+    "literacy": "ਸਿੱਖੋ ਅਤੇ ਕਮਾਓ",
+    "chat": "AI ਸਹਾਇਕ",
+    "consent": "ਗੋਪਨੀਯਤਾ ਅਤੇ ਸਹਿਮਤੀ",
+    "profile": "ਪ੍ਰੋਫਾਈਲ",
+    "whatsapp": "ਵਟਸਐਪ ਸਿਮੂਲੇਟਰ",
+    "logout": "ਲਾਗਆਉਟ"
+  },
+  "auth": {
+    "loginTitle": "ਜੀ ਆਇਆਂ ਨੂੰ",
+    "loginSubtitle": "ਆਪਣੀ ਈਮੇਲ ਜਾਂ ਫੋਨ ਨਾਲ ਲੌਗਇਨ ਕਰੋ",
+    "identifierPlaceholder": "ਫੋਨ ਜਾਂ ਈਮੇਲ",
+    "passwordPlaceholder": "ਪਾਸਵਰਡ",
+    "loginButton": "ਸਾਈਨ ਇਨ ਕਰੋ",
+    "quickDemo": "ਡੈਮੋ ਖਾਤੇ ਅਜ਼ਮਾਓ",
+    "demoFarmer": "🌾 ਰਮੇਸ਼ (ਕਿਸਾਨ)",
+    "demoSalaried": "💼 ਪ੍ਰਿਆ (ਨੌਕਰੀਪੇਸ਼ਾ)",
+    "demoShop": "🏪 ਸੁਰੇਸ਼ (ਦੁਕਾਨਦਾਰ)",
+    "demoGig": "🛵 ਅਰਜੁਨ (ਗਿਗ ਵਰਕਰ)",
+    "demoStressed": "⚠️ ਮੀਨਾ (ਮਦਦ ਦੀ ਲੋੜ)"
+  },
+  "dashboard": {
+    "welcome": "ਜੀ ਆਇਆਂ ਨੂੰ",
+    "balance": "ਕੁੱਲ ਉਪਲਬਧ ਬੈਲੇਂਸ",
+    "monthlyIncome": "ਮਹੀਨਾਵਾਰ ਆਮਦਨ",
+    "segment": "ਤੁਹਾਡੀ ਵਿੱਤੀ ਪ੍ਰੋਫਾਈਲ",
+    "stressStatus": "ਵਿੱਤੀ ਸਿਹਤ ਸਥਿਤੀ",
+    "recentTxns": "ਹਾਲੀਆ ਲੈਣ-ਦੇਣ",
+    "spendingInsights": "ਖਰਚੇ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "recommendations": "ਤੁਹਾਡੇ ਲਈ ਸਮਾਰਟ ਸਿਫਾਰਸ਼ਾਂ",
+    "whyRecommended": "ਇਹ ਸਿਫਾਰਸ਼ ਕਿਉਂ ਕੀਤੀ ਗਈ?",
+    "applyNow": "ਹੁਣੇ ਅਪਲਾਈ ਕਰੋ",
+    "viewAll": "ਸਭ ਦੇਖੋ",
+    "moneyFlow": "ਪੈਸੇ ਦੇ ਬਹਾਅ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "spendingPatterns": "ਖਰਚੇ ਦੇ ਤਰੀਕੇ",
+    "totalInflow": "ਕੁੱਲ ਆਮਦਨ (ਮਹੀਨਾਵਾਰ)",
+    "totalOutflow": "ਕੁੱਲ ਖਰਚਾ (ਮਹੀਨਾਵਾਰ)",
+    "netSurplus": "ਸ਼ੁੱਧ ਮਹੀਨਾਵਾਰ ਬਚਤ",
+    "activeEmi": "ਸਰਗਰਮ EMI ਕੁੱਲ"
+  },
+  "money": {
+    "title": "ਮੇਰਾ ਪੈਸਾ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "subtitle": "ਕੈਸ਼ ਫਲੋ, ਖਰਚੇ ਅਤੇ ਲੈਣ-ਦੇਣ ਰਿਕਾਰਡ",
+    "cumulativeTrend": "ਆਮਦਨ ਅਤੇ ਖਰਚੇ ਦਾ ਰੁਝਾਨ",
+    "verifiedTxns": "ਤਸਦੀਕਸ਼ੁਦਾ ਲੈਣ-ਦੇਣ",
+    "upcomingObligations": "ਆਉਣ ਵਾਲੀਆਂ ਦੇਣਦਾਰੀਆਂ",
+    "inflow": "ਆਮਦਨ (Inflow)",
+    "outflow": "ਖਰਚਾ (Outflow)"
+  },
+  "chat": {
+    "title": "ਬੈਂਕਿੰਗ AI ਸਹਾਇਕ",
+    "placeholder": "ਆਪਣੀ ਭਾਸ਼ਾ ਵਿੱਚ ਪੁੱਛੋ...",
+    "listening": "ਸੁਣ ਰਿਹਾ ਹੈ...",
+    "send": "ਭੇਜੋ",
+    "quickReplies": "ਤੇਜ਼ ਸਵਾਲ",
+    "checkBalance": "ਬੈਲੇਂਸ ਚੈੱਕ ਕਰੋ",
+    "applyLoan": "ਕਰਜ਼ੇ ਲਈ ਅਪਲਾਈ ਕਰੋ",
+    "emiCalc": "EMI ਕੈਲਕੁਲੇਟਰ"
+  },
+  "loan": {
+    "title": "ਤੁਰੰਤ ਕਰਜ਼ਾ ਅਰਜ਼ੀ",
+    "subtitle": "ਪਾਰਦਰਸ਼ੀ, ਕੋਈ ਲੁਕਵੇਂ ਚਾਰਜ ਨਹੀਂ",
+    "step": "ਕਦਮ",
+    "selectAmount": "ਕਰਜ਼ੇ ਦੀ ਰਕਮ ਚੁਣੋ",
+    "selectTenure": "ਮਿਆਦ ਚੁਣੋ",
+    "calculatedEmi": "ਅੰਦਾਜ਼ਨ ਮਹੀਨਾਵਾਰ EMI",
+    "kycVerify": "ਵੀਡੀਓ / OTP KYC",
+    "submit": "ਅਰਜ਼ੀ ਜਮ੍ਹਾਂ ਕਰੋ",
+    "congrats": "ਅਰਜ਼ੀ ਮਨਜ਼ੂਰ ਹੋ ਗਈ!"
+  },
+  "stress": {
+    "alertTitle": "ਵਿੱਤੀ ਸਿਹਤ ਚੇਤਾਵਨੀ",
+    "helpAction": "ਮੁੜ-ਗਠਨ ਵਿਕਲਪ ਦੇਖੋ"
+  },
+  "consent": {
+    "title": "ਸਹਿਮਤੀ ਅਤੇ ਡਾਟਾ ਗੋਪਨੀਯਤਾ",
+    "subtitle": "DPDP ਐਕਟ 2023 ਦੇ ਤਹਿਤ ਤੁਹਾਡੇ ਡਾਟੇ 'ਤੇ ਤੁਹਾਡਾ ਪੂਰਾ ਕੰਟਰੋਲ ਹੈ।",
+    "grant": "ਮਨਜ਼ੂਰੀ ਦਿਓ",
+    "revoke": "ਰੱਦ ਕਰੋ",
+    "active": "ਸਰਗਰਮ",
+    "disabled": "ਅਯੋਗ",
+    "downloadData": "ਮੇਰਾ ਡਾਟਾ ਡਾਊਨਲੋਡ ਕਰੋ",
+    "deleteData": "ਡਾਟਾ ਹਟਾਉਣ ਦੀ ਬੇਨਤੀ ਕਰੋ"
+  }
+}

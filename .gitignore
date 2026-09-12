@@ -1,0 +1,43 @@
+.agents
+skills-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+.env
+.env.*
+!.env.example
+
+# Django
+db.sqlite3
+*.log
+staticfiles/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ML models (large files — ML team manages separately)
+ml_models/*.pkl
+ml_models/*.json
+ml_models/*.h5
+ml_models/*.bin
+
+# IDE
+.vscode/
+.idea/
+
+# Frontend
+node_modules/
+dist/
+
+# Local/generated training data
+Hackout26-Model1/data/synthetic_customer_features.csv
+ML/**/__pycache__/
+backend/**/__pycache__/
+
+# Local model/runtime caches
+.cache/
+.huggingface/

@@ -1,0 +1,74 @@
+[
+  {
+    "product_id":"personal_loan_std",
+    "category":"personal_loan",
+    "min_income":15000,
+    "tags_str":"credit emergency flexible"
+  },
+  {
+    "product_id":"gold_loan",
+    "category":"gold_loan",
+    "min_income":0,
+    "tags_str":"credit collateral farmer quick"
+  },
+  {
+    "product_id":"kisan_credit",
+    "category":"personal_loan",
+    "min_income":0,
+    "tags_str":"credit farmer seasonal crop"
+  },
+  {
+    "product_id":"business_loan",
+    "category":"personal_loan",
+    "min_income":20000,
+    "tags_str":"credit shopkeeper growth"
+  },
+  {
+    "product_id":"fd_standard",
+    "category":"fixed_deposit",
+    "min_income":5000,
+    "tags_str":"savings safe fixed_return"
+  },
+  {
+    "product_id":"sip_mutual_fund",
+    "category":"investment",
+    "min_income":10000,
+    "tags_str":"investment growth long_term"
+  },
+  {
+    "product_id":"term_insurance",
+    "category":"insurance",
+    "min_income":15000,
+    "tags_str":"insurance protection family"
+  },
+  {
+    "product_id":"health_insurance",
+    "category":"insurance",
+    "min_income":0,
+    "tags_str":"insurance health family"
+  },
+  {
+    "product_id":"credit_card_basic",
+    "category":"credit_card",
+    "min_income":20000,
+    "tags_str":"credit rewards convenience"
+  },
+  {
+    "product_id":"student_savings",
+    "category":"savings_account",
+    "min_income":0,
+    "tags_str":"savings student low_fee"
+  },
+  {
+    "product_id":"gig_flexi_loan",
+    "category":"personal_loan",
+    "min_income":8000,
+    "tags_str":"credit gig_worker flexible quick"
+  },
+  {
+    "product_id":"recurring_deposit",
+    "category":"fixed_deposit",
+    "min_income":3000,
+    "tags_str":"savings discipline small_amount"
+  }
+]

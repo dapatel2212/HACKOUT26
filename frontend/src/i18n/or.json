@@ -1,0 +1,95 @@
+{
+  "app": {
+    "name": "ବ୍ୟାଙ୍କବଡି (BankBuddy)",
+    "tagline": "ଭାରତ ପାଇଁ AI-ସଞ୍ଚାଳିତ ବ୍ୟକ୍ତିଗତ ବ୍ୟାଙ୍କିଙ୍ଗ"
+  },
+  "nav": {
+    "dashboard": "ଡ୍ୟାସବୋର୍ଡ",
+    "money": "ମୋ ଟଙ୍କା",
+    "recommendations": "ସୁପାରିଶସମୂହ",
+    "loans": "ରୁଣ ଏବଂ କ୍ରେଡିଟ",
+    "wellness": "ଆର୍ଥିକ ସ୍ୱାସ୍ଥ୍ୟ",
+    "literacy": "ଶିଖନ୍ତୁ ଏବଂ ରୋଜଗାର କରନ୍ତୁ",
+    "chat": "AI ସହାୟକ",
+    "consent": "ଗୋପନୀୟତା ଏବଂ ସମ୍ମତି",
+    "profile": "ପ୍ରୋଫାଇଲ",
+    "whatsapp": "ହ୍ୱାଟସଆପ ସିମୁଲେଟର",
+    "logout": "ଲଗଆଉଟ"
+  },
+  "auth": {
+    "loginTitle": "ସ୍ୱାଗତମ",
+    "loginSubtitle": "ଆପଣଙ୍କ ଇମେଲ କିମ୍ବା ଫୋନ ନମ୍ବର ସହିତ ଲଗଇନ କରନ୍ତୁ",
+    "identifierPlaceholder": "ଫୋନ କିମ୍ବା ଇମେଲ",
+    "passwordPlaceholder": "ପାସୱାର୍ଡ",
+    "loginButton": "ସାଇନ ଇନ କରନ୍ତୁ",
+    "quickDemo": "ଡେମୋ ଆକାଉଣ୍ଟ ଚେଷ୍ଟା କରନ୍ତୁ",
+    "demoFarmer": "🌾 ରମେଶ (କୃଷକ)",
+    "demoSalaried": "💼 ପ୍ରିୟା (ଚାକିରିଆ)",
+    "demoShop": "🏪 ସୁରେଶ (ଦୋକାନୀ)",
+    "demoGig": "🛵 ଅର୍ଜୁନ (ଗିଗ ୱାର୍କର)",
+    "demoStressed": "⚠️ ମୀନା (ସହାୟତା ଆବଶ୍ୟକ)"
+  },
+  "dashboard": {
+    "welcome": "ସ୍ୱାଗତମ",
+    "balance": "ମୋଟ ଉପଲବ୍ଧ ବାଲାନ୍ସ",
+    "monthlyIncome": "ମାସିକ ଆୟ",
+    "segment": "ଆପଣଙ୍କ ଆର୍ଥିକ ପ୍ରୋଫାଇଲ",
+    "stressStatus": "ଆର୍ଥିକ ସ୍ୱାସ୍ଥ୍ୟ ସ୍ଥିତି",
+    "recentTxns": "ସାମ୍ପ୍ରତିକ କାରବାର",
+    "spendingInsights": "ଖର୍ଚ୍ଚ ବିଶ୍ଲେଷଣ",
+    "recommendations": "ଆପଣଙ୍କ ପାଇଁ ସ୍ମାର୍ଟ ସୁପାରିଶ",
+    "whyRecommended": "ଏହା କାହିଁକି ସୁପାରିଶ କରାଗଲା?",
+    "applyNow": "ବର୍ତ୍ତମାନ ଆବେଦନ କରନ୍ତୁ",
+    "viewAll": "ସମସ୍ତ ଦେଖନ୍ତୁ",
+    "moneyFlow": "ଅର୍ଥ ପ୍ରବାହ ବିଶ୍ଲେଷଣ",
+    "spendingPatterns": "ଖର୍ଚ୍ଚ ଶୈଳୀ",
+    "totalInflow": "ମୋଟ ଆୟ (ମାସିକ)",
+    "totalOutflow": "ମୋଟ ଖର୍ଚ୍ଚ (ମାସିକ)",
+    "netSurplus": "ମାସିକ ସଞ୍ଚୟ",
+    "activeEmi": "ସକ୍ରିୟ EMI ମୋଟ"
+  },
+  "money": {
+    "title": "ମୋ ଟଙ୍କା ବିଶ୍ଲେଷଣ",
+    "subtitle": "କ୍ୟାସ ଫ୍ଲୋ, ଖର୍ଚ୍ଚ ବିବରଣୀ ଏବଂ କାରବାର ରେକର୍ଡ",
+    "cumulativeTrend": "ଆୟ ଏବଂ ଖର୍ଚ୍ଚର ଧାରା",
+    "verifiedTxns": "ଯାଞ୍ଚ ହୋଇଥିବା କାରବାର",
+    "upcomingObligations": "ଆଗାମୀ ଦେୟ",
+    "inflow": "ଆୟ (Inflow)",
+    "outflow": "ଖର୍ଚ୍ଚ (Outflow)"
+  },
+  "chat": {
+    "title": "ବ୍ୟାଙ୍କିଙ୍ଗ AI ସହାୟକ",
+    "placeholder": "ଆପଣଙ୍କ ଭାଷାରେ ପଚାରନ୍ତୁ...",
+    "listening": "ଶୁଣୁଛୁ...",
+    "send": "ପଠାନ୍ତୁ",
+    "quickReplies": "ଦ୍ରୁତ ପ୍ରଶ୍ନ",
+    "checkBalance": "ବାଲାନ୍ସ ଯାଞ୍ଚ କରନ୍ତୁ",
+    "applyLoan": "ରୁଣ ପାଇଁ ଆବେଦନ କରନ୍ତୁ",
+    "emiCalc": "EMI କାଲକୁଲେଟର"
+  },
+  "loan": {
+    "title": "ତୁରନ୍ତ ରୁଣ ଆବେଦନ",
+    "subtitle": "ସ୍ୱଚ୍ଛ, କୌଣସି ଗୁପ୍ତ ଚାର୍ଜ ନାହିଁ",
+    "step": "ପଦକ୍ଷେପ",
+    "selectAmount": "ରୁଣ ପରିମାଣ ଚୟନ କରନ୍ତୁ",
+    "selectTenure": "ଅବଧି ଚୟନ କରନ୍ତୁ",
+    "calculatedEmi": "ଆନୁମାନିକ ମାସିକ EMI",
+    "kycVerify": "ଭିଡିଓ / OTP KYC",
+    "submit": "ଆବେଦନ ଦାଖଲ କରନ୍ତୁ",
+    "congrats": "ଆବେଦନ ଅନୁମୋଦିତ!"
+  },
+  "stress": {
+    "alertTitle": "ଆର୍ଥିକ ସ୍ୱାସ୍ଥ୍ୟ ସତର୍କତା",
+    "helpAction": "ପୁନର୍ଗଠନ ବିକଳ୍ପ ଦେଖନ୍ତୁ"
+  },
+  "consent": {
+    "title": "ସମ୍ମତି ଏବଂ ଡାଟା ଗୋପନୀୟତା",
+    "subtitle": "DPDP ଆଇନ 2023 ଅଧୀନରେ ଆପଣଙ୍କ ଡାଟା ଉପରେ ଆପଣଙ୍କର ପୂର୍ଣ୍ଣ ନିୟନ୍ତ୍ରଣ ଅଛି।",
+    "grant": "ଅନୁମତି ଦିଅନ୍ତୁ",
+    "revoke": "ରଦ୍ଦ କରନ୍ତୁ",
+    "active": "ସକ୍ରିୟ",
+    "disabled": "ନିଷ୍କ୍ରିୟ",
+    "downloadData": "ମୋ ଡାଟା ଡାଉନଲୋଡ କରନ୍ତୁ",
+    "deleteData": "ଡାଟା ହଟାଇବା ପାଇଁ ଅନୁରୋଧ କରନ୍ତୁ"
+  }
+}

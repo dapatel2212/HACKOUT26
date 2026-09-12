@@ -1,0 +1,95 @@
+{
+  "app": {
+    "name": "বেংকবাডী (BankBuddy)",
+    "tagline": "ভাৰতৰ বাবে AI-চালিত ব্যক্তিগতকৃত বেংকিং"
+  },
+  "nav": {
+    "dashboard": "ড্যাছবৰ্ড",
+    "money": "মোৰ ধন",
+    "recommendations": "পৰামৰ্শৱালী",
+    "loans": "ঋণ আৰু ক্ৰেডিট",
+    "wellness": "বিত্তীয় স্বাস্থ্য",
+    "literacy": "শিকক আৰু উপাৰ্জন কৰক",
+    "chat": "AI সহায়ক",
+    "consent": "গোপনীয়তা আৰু সন্মতি",
+    "profile": "প্রফাইল",
+    "whatsapp": "হোৱাটছএপ চিমিউলেটৰ",
+    "logout": "লগ আউট"
+  },
+  "auth": {
+    "loginTitle": "পুনৰ স্বাগতম",
+    "loginSubtitle": "আপোনাৰ ইমেইল বা ফোন নম্বৰৰ সৈতে লগইন কৰক",
+    "identifierPlaceholder": "ফোন বা ইমেইল",
+    "passwordPlaceholder": "পাছৱৰ্ড",
+    "loginButton": "চাইন ইন কৰক",
+    "quickDemo": "ডেমো একাউণ্ট চেষ্টা কৰক",
+    "demoFarmer": "🌾 ৰমেশ (কৃষক)",
+    "demoSalaried": "💼 প্ৰিয়া (চাকৰিয়াল)",
+    "demoShop": "🏪 সুৰেশ (দোকানী)",
+    "demoGig": "🛵 অৰ্জুন (গিগ কৰ্মী)",
+    "demoStressed": "⚠️ মীনা (সহায়ৰ প্ৰয়োজন)"
+  },
+  "dashboard": {
+    "welcome": "স্বাগতম",
+    "balance": "মুঠ উপলব্ধ বেলেন্স",
+    "monthlyIncome": "মাহেকীয়া উপাৰ্জন",
+    "segment": "আপোনাৰ বিত্তীয় প্রফাইল",
+    "stressStatus": "বিত্তীয় স্বাস্থ্য স্থিতি",
+    "recentTxns": "শেহতীয়া লেনদেন",
+    "spendingInsights": "খৰচৰ বিশ্লেষণ",
+    "recommendations": "আপোনাৰ বাবে স্মাৰ্ট পৰামৰ্শ",
+    "whyRecommended": "এইটো কেলেই পৰামৰ্শ দিয়া হ'ল?",
+    "applyNow": "এতিয়াই আবেদন কৰক",
+    "viewAll": "সকলো চাওক",
+    "moneyFlow": "ধনৰ প্ৰবাহ বিশ্লেষণ",
+    "spendingPatterns": "খৰচৰ প্ৰণালী",
+    "totalInflow": "মুঠ উপাৰ্জন (মাহেকীয়া)",
+    "totalOutflow": "মুঠ খৰচ (মাহেকীয়া)",
+    "netSurplus": "মাহেকীয়া সঞ্চয়",
+    "activeEmi": "সক্ৰিয় EMI"
+  },
+  "money": {
+    "title": "মোৰ ধন বিশ্লেষণ",
+    "subtitle": "ক্যাশ ফ্লো, খৰচৰ বিৱৰণ আৰু লেনদেনৰ ৰেকৰ্ড",
+    "cumulativeTrend": "উপাৰ্জন আৰু খৰচৰ ধাৰা",
+    "verifiedTxns": "পৰীক্ষিত লেনদেন",
+    "upcomingObligations": "আগন্তুক দায়িত্ব",
+    "inflow": "উপাৰ্জন (Inflow)",
+    "outflow": "খৰচ (Outflow)"
+  },
+  "chat": {
+    "title": "বেংকিং AI সহায়ক",
+    "placeholder": "আপোনাৰ ভাষাত সোধক...",
+    "listening": "শুনি থকা হৈছে...",
+    "send": "পঠিয়াওক",
+    "quickReplies": "দ্ৰুত প্ৰশ্ন",
+    "checkBalance": "বেলেন্স পৰীক্ষা কৰক",
+    "applyLoan": "ঋণৰ বাবে আবেদন কৰক",
+    "emiCalc": "EMI কেলকুলেটৰ"
+  },
+  "loan": {
+    "title": "তাত্ক্ষণিক ঋণৰ আবেদন",
+    "subtitle": "স্বচ্ছ, কোনো গোপন চাৰ্জ নাই",
+    "step": "পদক্ষেপ",
+    "selectAmount": "ঋণৰ পৰিমাণ বাছনি কৰক",
+    "selectTenure": "সময়সীমা বাছনি কৰক",
+    "calculatedEmi": "আনুমানিক মাহেকীয়া EMI",
+    "kycVerify": "ভিডিঅ' / OTP KYC",
+    "submit": "আবেদন দাখিল কৰক",
+    "congrats": "আবেদন অনুমোদিত হ'ল!"
+  },
+  "stress": {
+    "alertTitle": "বিত্তীয় স্বাস্থ্য সতৰ্কবাৰ্তা",
+    "helpAction": "পুনৰগঠনৰ বিকল্প চাওক"
+  },
+  "consent": {
+    "title": "সন্মতি আৰু ডাটা গোপনীয়তা",
+    "subtitle": "DPDP আইন ২০২৩ ৰ অধীনত আপোনাৰ ডাটাৰ ওপৰত আপোনাৰ সম্পূৰ্ণ নিয়ন্ত্ৰণ আছে।",
+    "grant": "অনুমতি দিয়ক",
+    "revoke": "বাতিল কৰক",
+    "active": "সক্ৰিয়",
+    "disabled": "নিষ্ক্ৰিয়",
+    "downloadData": "মোৰ ডাটা ডাউনলৌড কৰক",
+    "deleteData": "ডাটা মচি পেলোৱাৰ অনুৰোধ জনাওক"
+  }
+}

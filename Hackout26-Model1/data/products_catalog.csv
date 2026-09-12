@@ -1,0 +1,14 @@
+product_id,product_name,category,risk_level,min_income,target_segments,target_life_stages,typical_amount,tenure_months
+P01,savings_account,deposits,1,0,all,all,5000,0
+P02,fd,deposits,1,10000,"prudent_savers,family_builders","salaried,elderly",50000,12
+P03,credit_card,credit,2,20000,"aspiring_spenders,digital_natives","first_job,salaried",40000,12
+P04,personal_loan,credit,3,18000,"family_builders,aspiring_spenders","marriage,medical",80000,24
+P05,home_loan,credit,2,40000,"family_builders,prudent_savers",mid_career,2500000,180
+P06,car_loan,credit,2,30000,"aspiring_spenders,family_builders",young_family,600000,60
+P07,health_insurance,insurance,1,12000,"family_builders,prudent_savers,elderly",all,8000,12
+P08,life_insurance,insurance,1,15000,"family_builders,prudent_savers","salaried,family",12000,120
+P09,sip,investment,2,15000,"digital_natives,prudent_savers","first_job,salaried",1500,36
+P10,mutual_fund,investment,3,25000,"prudent_savers,digital_natives",wealth_growth,25000,36
+P11,education_loan,credit,2,15000,"family_builders,digital_natives",higher_studies,350000,60
+P12,kisan_credit,credit,2,10000,seasonal_earners,farmer,75000,12
+P13,weather_insurance,insurance,1,8000,seasonal_earners,farmer,3500,6

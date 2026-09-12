@@ -1,0 +1,26 @@
+{
+  "label2id": {
+    "apply_loan": 0,
+    "cancel_or_dispute": 1,
+    "check_balance": 2,
+    "emi_calculator": 3,
+    "general_query": 4,
+    "get_recommendation": 5,
+    "product_info": 6,
+    "report_fraud": 7,
+    "restructure_emi": 8,
+    "track_application": 9
+  },
+  "id2label": {
+    "0": "apply_loan",
+    "1": "cancel_or_dispute",
+    "2": "check_balance",
+    "3": "emi_calculator",
+    "4": "general_query",
+    "5": "get_recommendation",
+    "6": "product_info",
+    "7": "report_fraud",
+    "8": "restructure_emi",
+    "9": "track_application"
+  }
+}

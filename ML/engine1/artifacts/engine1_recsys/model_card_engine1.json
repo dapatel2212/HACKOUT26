@@ -1,0 +1,36 @@
+{
+  "model_name": "engine1_segmentation_recommendation",
+  "version": "1.0.0",
+  "dataset": {
+    "name": "Synthetic (per plan spec: 500 customers, 6 segments, 6mo interactions)",
+    "note": "Real Indian banking product-interaction logs are not publicly available for privacy reasons (DPDP Act) -- this matches the plan's own generate_synthetic_data.py strategy.",
+    "n_customers": 500,
+    "n_interactions": 7503
+  },
+  "segmentation_metrics": {
+    "silhouette_test": 0.07564759364745796,
+    "davies_bouldin_test": 2.5581136402702063,
+    "calinski_harabasz_test": 10.931681336498716,
+    "stability_ari_mean": 0.4880063159521784
+  },
+  "ranking_metrics_test": {
+    "precision@3": 0.45993031358885017,
+    "precision@10": 0.1505226480836237,
+    "recall@3": 0.9483739837398374,
+    "recall@10": 1.0,
+    "ndcg@10": 0.8504174006131721,
+    "map@10": 0.8108546264034069
+  },
+  "hyperparameters": {
+    "kmeans_k": 6,
+    "als_factors": 32,
+    "als_iterations": 20,
+    "lgb_num_leaves": 31,
+    "lgb_learning_rate": 0.05
+  },
+  "artifact_sha256": {
+    "segmentation_kmeans": "4a0855d3dc6e87f7b302d683af76a2e311588837d1fc642f254c66eec2d42b9c",
+    "ltr_ranker": "781289335e587e02dd5aa879248f91df06ebd4f5fe3b1b5b809411c05d8d1a4e"
+  },
+  "random_seed": 42
+}

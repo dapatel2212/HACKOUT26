@@ -1,0 +1,8 @@
+{
+  "operating_threshold": 0.5637434664542371,
+  "contamination_used": 0.0019261250777472363,
+  "roc_auc": 0.9344614580010373,
+  "pr_auc": 0.027895687965752373,
+  "false_positive_rate": 0.013968477178180113,
+  "false_negative_rate": 0.5
+}
