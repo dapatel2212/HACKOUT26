@@ -22,6 +22,25 @@ export const authService = {
     return { customer, tokens };
   },
 
+  async sendOtp(email, purpose = 'register') {
+    const res = await api.post('/auth/otp/send/', { email, purpose });
+    return res.data;
+  },
+
+  async verifyOtp(email, otp, purpose = 'register') {
+    const res = await api.post('/auth/otp/verify/', { email, otp, purpose });
+    return res.data;
+  },
+
+  async loginWithOtp(email, otp) {
+    const res = await api.post('/auth/login-otp/', { email, otp });
+    const { tokens, customer } = res.data;
+    localStorage.setItem('access_token', tokens.access);
+    localStorage.setItem('refresh_token', tokens.refresh);
+    localStorage.setItem('customer', JSON.stringify(customer));
+    return { customer, tokens };
+  },
+
   async getProfile() {
     const res = await api.get('/auth/profile/');
     return res.data;

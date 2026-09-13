@@ -3,6 +3,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useLoanStore } from '../store/useLoanStore'
 import { useDemoStore } from '../store/useDemoStore'
 import { useAuthStore } from '../store/authStore'
+import { loanService } from '../services/loanService'
 
 export const Route = createFileRoute('/_auth/loans')({
   component: LoansPage,
@@ -20,7 +21,7 @@ const LOAN_PRODUCTS = [
 
 function LoansPage() {
   const { step, loanDetails, nextStep, prevStep, updateLoanDetails, resetLoan } = useLoanStore()
-  const { activeProfile, canApplyForLoan } = useDemoStore()
+  const { activeProfile, canApplyForLoan, addLoanToActiveProfile } = useDemoStore()
   const { customer } = useAuthStore()
 
   // Dedicated interactive EMI calculator state
@@ -58,8 +59,11 @@ function LoansPage() {
   const totalPayable = emiVal * calcTenure
   const totalInterest = totalPayable - calcAmount
 
-  // 1. Stress Guardrail Blocking (stress score above the shared threshold)
-  if (!canApplyForLoan()) {
+  // 1. Stress Guardrail Blocking (stress score above 50 threshold)
+  const userStressScore = customer ? Number(customer.stress_score || 0) : Number(activeProfile.stressScore || 0)
+  const isBlockedByGuardrail = userStressScore > 50
+
+  if (isBlockedByGuardrail) {
     return (
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-amber-300 dark:border-amber-800 shadow-sm text-center space-y-4">
@@ -72,7 +76,7 @@ function LoansPage() {
           </h1>
 
           <p className="text-sm text-slate-600 dark:text-slate-300 max-w-xl mx-auto leading-relaxed">
-            Your current financial stress score is <b>{activeProfile.stressScore}/100</b>. Under BankBuddy's ethical AI commitment, a new loan could add pressure right now. We do not promote debt that could destabilize your household.
+            Your current financial stress score is <b>{Number(activeProfile.stressScore || 0).toFixed(2)}/100</b>. Under BankBuddy's ethical AI commitment, a new loan could add pressure right now. We do not promote debt that could destabilize your household.
           </p>
 
           <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-left max-w-lg mx-auto text-xs text-amber-950 dark:text-amber-200 space-y-2">
@@ -143,20 +147,53 @@ function LoansPage() {
     nextStep()
   }
 
+  const PROFILE_TO_CUST_ID = {
+    ramesh: 'CUST_DEMO_001',
+    priya: 'CUST_DEMO_002',
+    suresh: 'CUST_DEMO_003',
+    arjun: 'CUST_DEMO_004',
+    meena: 'CUST_DEMO_005',
+    cust_demo_101: 'CUST_DEMO_101',
+    cust_demo_102: 'CUST_DEMO_102',
+  }
+
   const handleSubmitApplication = async () => {
-    if (customer?.customer_id?.startsWith('CUST_')) {
+    let finalAppId = ''
+    let finalStatus = 'PENDING'
+    let rejectionReason = ''
+
+    const targetCustId = customer?.customer_id || PROFILE_TO_CUST_ID[activeProfile.id] || activeProfile.id
+
+    try {
       const application = await loanService.applyLoan({
-        customer_id: customer.customer_id,
+        customer_id: targetCustId,
+        product_name: loanDetails.product || 'Personal Loan',
         amount: calcAmount,
         tenure_months: calcTenure,
       })
-      setAppId(application.application_id)
-      updateLoanDetails({ applicationId: application.application_id, status: application.status })
-      return
+      finalAppId = application.application_id || `LN_${Math.random().toString(36).substring(2, 9).toUpperCase()}`
+      finalStatus = application.status || 'PENDING'
+      setAppId(finalAppId)
+      updateLoanDetails({ applicationId: finalAppId, status: finalStatus })
+    } catch (err) {
+      finalAppId = `LN_${Math.random().toString(36).substring(2, 9).toUpperCase()}`
+      finalStatus = 'REJECTED'
+      rejectionReason = err?.response?.data?.error || 'Ethical AI Guardrail: Financial stress score exceeds safety threshold (50).'
+      setAppId(finalAppId)
+      updateLoanDetails({ applicationId: finalAppId, status: finalStatus })
     }
-    const generatedId = `LN_${Math.random().toString(36).substring(2, 9).toUpperCase()}`
-    setAppId(generatedId)
-    updateLoanDetails({ applicationId: generatedId })
+
+    addLoanToActiveProfile({
+      id: finalAppId,
+      productName: loanDetails.product || 'Personal Loan',
+      amount: calcAmount,
+      tenureMonths: calcTenure,
+      monthlyEmi: emiVal,
+      appliedDate: 'Just Now',
+      status: finalStatus,
+      rejection_reason: rejectionReason,
+      category: 'Credit Facility',
+    })
   }
 
   return (
@@ -674,13 +711,19 @@ function LoansPage() {
                   <div className="text-slate-400 text-[10px]">Simulated Demo Submission &bull; No Real Bureau Record</div>
                 </div>
 
-                <div className="pt-4 flex justify-center gap-3">
+                <div className="pt-4 flex flex-wrap justify-center gap-3">
                   <button
                     onClick={handleResetLoan}
                     className="px-5 py-2 text-xs font-bold rounded-xl border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-50"
                   >
                     Apply for Another Loan
                   </button>
+                  <Link
+                    to="/profile"
+                    className="px-5 py-2 text-xs font-bold rounded-xl bg-emerald-700 text-white hover:bg-emerald-800 shadow-sm"
+                  >
+                    View Status in Profile Ledger
+                  </Link>
                   <Link
                     to="/dashboard"
                     onClick={handleResetLoan}

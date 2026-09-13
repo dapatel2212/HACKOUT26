@@ -164,7 +164,7 @@ export default function DashboardPage() {
               <span className={`w-3.5 h-3.5 rounded-full ${stressInfo.dot}`}></span>
               <span className="font-bold text-gray-900 text-lg">{stressInfo.label}</span>
             </div>
-            <p className="text-xs text-gray-600 mt-1">Stress Score: {profile?.stress_score || 22}/100</p>
+            <p className="text-xs text-gray-600 mt-1">Stress Score: {Number(profile?.stress_score || 22).toFixed(2)}/100</p>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
             <div

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCustomerStore } from '../store/customerStore';
+import { useDemoStore } from '../store/useDemoStore';
+import { loanService } from '../services/loanService';
 
 export default function LoanPage() {
   const { t } = useTranslation();
   const { profile, stressLevel, stressScore } = useCustomerStore();
+  const { activeProfile, addLoanToActiveProfile } = useDemoStore();
 
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(50000);
@@ -21,6 +23,38 @@ export default function LoanPage() {
   );
 
   const handleApply = async () => {
+    const generatedId = `LN_${Math.random().toString(36).substring(2, 9).toUpperCase()}`
+    try {
+      const custId = profile?.customer_id || activeProfile?.id || 'CUST_DEMO_001'
+      const application = await loanService.applyLoan({
+        customer_id: custId,
+        product_name: 'Personal Loan',
+        amount: amount,
+        tenure_months: tenure,
+      })
+      const appId = application.application_id || generatedId
+      addLoanToActiveProfile({
+        id: appId,
+        productName: 'Personal Loan',
+        amount: amount,
+        tenureMonths: tenure,
+        monthlyEmi: emi,
+        appliedDate: 'Just Now',
+        status: application.status || 'PENDING',
+        category: 'Personal',
+      })
+    } catch {
+      addLoanToActiveProfile({
+        id: generatedId,
+        productName: 'Personal Loan',
+        amount: amount,
+        tenureMonths: tenure,
+        monthlyEmi: emi,
+        appliedDate: 'Just Now',
+        status: 'PENDING',
+        category: 'Personal',
+      })
+    }
     setStep(4);
   };
 

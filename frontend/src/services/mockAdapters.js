@@ -1,27 +1,47 @@
-import { PROFILES } from '../store/useDemoStore'
+import { PROFILES, useDemoStore } from '../store/useDemoStore'
 
 export const getDashboardData = async (profileId) => {
-  await new Promise((resolve) => setTimeout(resolve, 300))
-  const profile = Object.values(PROFILES).find((p) => p.id === profileId) || PROFILES.RAMESH
+  await new Promise((resolve) => setTimeout(resolve, 200))
+  const pid = (profileId || '').toLowerCase()
+  const profile = Object.values(PROFILES).find((p) => p.id === pid)
+  if (profile) {
+    return {
+      profileId: profile.id,
+      name: profile.name,
+      segment: profile.segment,
+      displaySegment: profile.displaySegment,
+      balance: profile.balance,
+      monthlyIncome: profile.monthlyIncome,
+      savingsRate: profile.savingsRate,
+      wellnessScore: profile.wellnessScore,
+      stressScore: profile.stressScore,
+      status: profile.status,
+      nextEmi: profile.upcomingEmi,
+      recommendedThemes: profile.recommendedThemes,
+    }
+  }
 
+  // Real new user profile zero baseline
+  const activeProfile = useDemoStore.getState().activeProfile
   return {
-    profileId: profile.id,
-    name: profile.name,
-    segment: profile.segment,
-    displaySegment: profile.displaySegment,
-    balance: profile.balance,
-    monthlyIncome: profile.monthlyIncome,
-    savingsRate: profile.savingsRate,
-    wellnessScore: profile.wellnessScore,
-    stressScore: profile.stressScore,
-    status: profile.status,
-    nextEmi: profile.upcomingEmi,
-    recommendedThemes: profile.recommendedThemes,
+    profileId: profileId,
+    name: activeProfile?.name || 'New Customer',
+    segment: activeProfile?.segment || 'prudent_savers',
+    displaySegment: activeProfile?.displaySegment || 'New Account',
+    balance: activeProfile?.balance ?? 0,
+    monthlyIncome: activeProfile?.monthlyIncome ?? 0,
+    savingsRate: activeProfile?.savingsRate ?? 0,
+    wellnessScore: activeProfile?.wellnessScore ?? 50,
+    stressScore: activeProfile?.stressScore ?? 0,
+    status: activeProfile?.status || 'GREEN',
+    nextEmi: activeProfile?.upcomingEmi ?? 0,
+    recommendedThemes: activeProfile?.recommendedThemes || ['Account Setup', 'Financial Literacy', 'Emergency Savings'],
   }
 }
 
 export const getTransactionsData = async (profileId) => {
-  await new Promise((resolve) => setTimeout(resolve, 200))
+  await new Promise((resolve) => setTimeout(resolve, 150))
+  const pid = (profileId || '').toLowerCase()
 
   const baseTransactions = {
     ramesh: [
@@ -59,15 +79,64 @@ export const getTransactionsData = async (profileId) => {
       { id: 'tx-4', title: 'Local Kirana Groceries', category: 'Household', amount: 2200, type: 'debit', date: '01 Sep 2026', status: 'Completed' },
       { id: 'tx-5', title: 'School Books & Uniform', category: 'Education', amount: 1400, type: 'debit', date: '25 Aug 2026', status: 'Completed' },
     ],
+    cust_demo_101: [
+      { id: 'tx-1', title: 'TechNova Solutions Salary', category: 'Salary', amount: 95000, type: 'credit', date: '01 Sep 2026', status: 'Completed' },
+      { id: 'tx-2', title: 'Home Loan Auto-Debit EMI', category: 'EMI', amount: 24150, type: 'debit', date: '05 Sep 2026', status: 'Completed' },
+      { id: 'tx-3', title: 'Nifty 50 Index SIP', category: 'Investment', amount: 15000, type: 'debit', date: '07 Sep 2026', status: 'Completed' },
+      { id: 'tx-4', title: 'D-Mart Supermarket', category: 'Groceries', amount: 5200, type: 'debit', date: '09 Sep 2026', status: 'Completed' },
+      { id: 'tx-5', title: 'Personal Loan EMI', category: 'EMI', amount: 4680, type: 'debit', date: '10 Sep 2026', status: 'Completed' },
+    ],
+    cust_demo_102: [
+      { id: 'tx-1', title: 'PhonePe Merchant Settlement', category: 'Business Income', amount: 18500, type: 'credit', date: '09 Sep 2026', status: 'Completed' },
+      { id: 'tx-2', title: 'Wholesale Fabric Purchase', category: 'Inventory', amount: 22000, type: 'debit', date: '08 Sep 2026', status: 'Completed' },
+      { id: 'tx-3', title: 'Working Capital OD EMI', category: 'EMI', amount: 13280, type: 'debit', date: '05 Sep 2026', status: 'Completed' },
+      { id: 'tx-4', title: 'Google Pay Daily Collection', category: 'Business Income', amount: 12400, type: 'credit', date: '07 Sep 2026', status: 'Completed' },
+      { id: 'tx-5', title: 'Shop Electricity Bill', category: 'Utilities', amount: 4100, type: 'debit', date: '03 Sep 2026', status: 'Completed' },
+    ],
   }
 
-  return baseTransactions[profileId] || baseTransactions.ramesh
+  // Return empty list of transactions for new real users
+  return baseTransactions[pid] || []
 }
 
 export const getMoneyFlowTrends = (profileId, range = '3M') => {
-  const profile = Object.values(PROFILES).find((p) => p.id === profileId) || PROFILES.RAMESH
-  const baseInc = profile.monthlyIncome
-  const baseExp = Math.round(baseInc * (1 - profile.savingsRate / 100))
+  const pid = (profileId || '').toLowerCase()
+  const profile = Object.values(PROFILES).find((p) => p.id === pid)
+
+  if (!profile) {
+    // New real user zero baseline
+    const activeProfile = useDemoStore.getState().activeProfile
+    const baseInc = activeProfile?.monthlyIncome ?? 0
+    if (baseInc === 0) {
+      if (range === '1M') {
+        return [
+          { period: 'Week 1', income: 0, expense: 0 },
+          { period: 'Week 2', income: 0, expense: 0 },
+          { period: 'Week 3', income: 0, expense: 0 },
+          { period: 'Week 4', income: 0, expense: 0 },
+        ]
+      }
+      if (range === '6M') {
+        return [
+          { period: 'Apr', income: 0, expense: 0 },
+          { period: 'May', income: 0, expense: 0 },
+          { period: 'Jun', income: 0, expense: 0 },
+          { period: 'Jul', income: 0, expense: 0 },
+          { period: 'Aug', income: 0, expense: 0 },
+          { period: 'Sep', income: 0, expense: 0 },
+        ]
+      }
+      return [
+        { period: 'Jul', income: 0, expense: 0 },
+        { period: 'Aug', income: 0, expense: 0 },
+        { period: 'Sep', income: 0, expense: 0 },
+      ]
+    }
+  }
+
+  const p = profile || PROFILES.RAMESH
+  const baseInc = p.monthlyIncome
+  const baseExp = Math.round(baseInc * (1 - p.savingsRate / 100))
 
   if (range === '1M') {
     return [
@@ -97,7 +166,49 @@ export const getMoneyFlowTrends = (profileId, range = '3M') => {
 }
 
 export const getRecommendationsData = (profileId) => {
-  const profile = Object.values(PROFILES).find((p) => p.id === profileId) || PROFILES.RAMESH
+  const pid = (profileId || '').toLowerCase()
+  const profile = Object.values(PROFILES).find((p) => p.id === pid)
+
+  if (!profile) {
+    return [
+      {
+        id: 'rec-new-1',
+        title: 'Complete Profile & KYC Verification',
+        category: 'Account Setup',
+        matchScore: 98,
+        benefit: 'Unlock full banking features, personalized AI guidance, and credit score monitoring.',
+        explanation: 'Initial step for all new BankBuddy accounts to activate ethical AI financial tools.',
+        positiveFactors: ['Account registered successfully (+50%)', 'Clean zero financial risk (+40%)'],
+        negativeFactors: ['Requires basic KYC completion'],
+        actionType: 'apply',
+        actionLabel: 'Complete Verification',
+      },
+      {
+        id: 'rec-new-2',
+        title: 'Build Emergency Savings Buffer',
+        category: 'Savings & Wellness',
+        matchScore: 92,
+        benefit: 'Build a safety cushion to protect yourself and your family against unpredicted costs.',
+        explanation: 'Recommended initial financial goal for new accounts before starting investments.',
+        positiveFactors: ['Clean account baseline (+35%)', 'High disciplined savings potential (+25%)'],
+        negativeFactors: ['Requires initial deposit'],
+        actionType: 'explore',
+        actionLabel: 'Setup Emergency Buffer',
+      },
+      {
+        id: 'rec-new-3',
+        title: 'Explore Vernacular Financial Literacy',
+        category: 'Financial Education',
+        matchScore: 88,
+        benefit: 'Learn smart money management in your native language and earn rewards.',
+        explanation: 'Free interactive modules on budgeting, credit health, and government schemes.',
+        positiveFactors: ['Free access for all Bharat users (+30%)', 'Earn financial badges (+20%)'],
+        negativeFactors: ['5-minute learning modules'],
+        actionType: 'explore',
+        actionLabel: 'Start Learning',
+      },
+    ]
+  }
 
   if (profile.id === 'ramesh') {
     return [

@@ -4,7 +4,7 @@ Central constants. Import from here — never hardcode these values.
 
 SEGMENTS = [
     'prudent_savers', 'aspiring_spenders', 'family_builders',
-    'digital_natives', 'seasonal_earners', 'stressed_accounts',
+    'digital_natives', 'seasonal_earners', 'stressed_accounts', 'other',
 ]
 
 SEGMENT_NAMES = {
@@ -14,6 +14,7 @@ SEGMENT_NAMES = {
     'digital_natives': 'Digital Natives',
     'seasonal_earners': 'Seasonal Earners (Farmers)',
     'stressed_accounts': 'Stressed Accounts',
+    'other': 'Other',
 }
 
 SEGMENT_DESCRIPTIONS = {
@@ -23,6 +24,7 @@ SEGMENT_DESCRIPTIONS = {
     'digital_natives': 'Heavy UPI usage, subscription services, tech spend',
     'seasonal_earners': 'Irregular income, crop-cycle patterns, rural',
     'stressed_accounts': 'EMI bounces, declining balance, salary delays',
+    'other': 'Income source does not match the listed segments',
 }
 
 STRESS_LEVELS = ['GREEN', 'YELLOW', 'ORANGE', 'RED']

@@ -34,6 +34,38 @@ class AuthTests(TestCase):
         mock_coll.insert_one.assert_called_once()
 
     @patch('customers.views.get_collection')
+    def test_register_other_income_segment(self, mock_get_coll):
+        mock_coll = MagicMock()
+        mock_coll.find_one.return_value = None
+        mock_get_coll.return_value = mock_coll
+
+        res = self.client.post('/api/auth/register/', {
+            'email': 'other@demo.com',
+            'password': 'password123',
+            'name': 'Other Income User',
+            'phone': '+919876543211',
+            'segment': 'other',
+            'other_income': 'Freelance consulting',
+        }, format='json')
+
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(res.data['customer']['segment'], 'other')
+        mock_coll.insert_one.assert_called_once()
+
+    @patch('customers.views.get_collection')
+    def test_register_other_income_requires_description(self, mock_get_coll):
+        mock_get_coll.return_value = MagicMock()
+
+        res = self.client.post('/api/auth/register/', {
+            'email': 'missing-description@demo.com',
+            'password': 'password123',
+            'segment': 'other',
+        }, format='json')
+
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('describe', res.data['error'])
+
+    @patch('customers.views.get_collection')
     def test_login_success(self, mock_get_coll):
         mock_coll = MagicMock()
         mock_coll.find_one.return_value = {
@@ -81,6 +113,80 @@ class AuthTests(TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertIn('access', res.data)
+
+    @patch('customers.views.send_mail')
+    @patch('customers.views.get_collection')
+    def test_send_otp_success(self, mock_get_coll, mock_send_mail):
+        mock_coll = MagicMock()
+        mock_coll.find_one.return_value = None  # user doesn't exist for register
+        mock_get_coll.return_value = mock_coll
+
+        res = self.client.post('/api/auth/otp/send/', {
+            'email': 'newuser@demo.com',
+            'purpose': 'register'
+        }, format='json')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.data['success'])
+        self.assertIn('dev_otp', res.data)
+        mock_coll.insert_one.assert_called_once()
+
+    @patch('customers.views.get_collection')
+    def test_verify_otp_success(self, mock_get_coll):
+        from datetime import datetime, timezone, timedelta
+        mock_coll = MagicMock()
+        now = datetime.now(timezone.utc)
+        mock_coll.find_one.return_value = {
+            'email': 'user@demo.com',
+            'otp': '123456',
+            'purpose': 'register',
+            'expires_at': (now + timedelta(minutes=10)).isoformat(),
+            '_id': 'mock_id'
+        }
+        mock_get_coll.return_value = mock_coll
+
+        res = self.client.post('/api/auth/otp/verify/', {
+            'email': 'user@demo.com',
+            'otp': '123456',
+            'purpose': 'register'
+        }, format='json')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.data['success'])
+
+    @patch('customers.views.get_collection')
+    def test_login_with_otp_success(self, mock_get_coll):
+        from datetime import datetime, timezone, timedelta
+        mock_coll = MagicMock()
+        now = datetime.now(timezone.utc)
+
+        def mock_find_one(query, *args, **kwargs):
+            if 'otp' in str(query) or 'purpose' in str(query):
+                return {
+                    'email': 'farmer@demo.com',
+                    'otp': '654321',
+                    'purpose': 'login',
+                    'expires_at': (now + timedelta(minutes=10)).isoformat(),
+                    '_id': 'mock_id'
+                }
+            return {
+                'customer_id': 'CUST_123',
+                'email': 'farmer@demo.com',
+                'name': 'Ramesh Kumar',
+            }
+
+        mock_coll.find_one.side_effect = mock_find_one
+        mock_get_coll.return_value = mock_coll
+
+        res = self.client.post('/api/auth/login-otp/', {
+            'email': 'farmer@demo.com',
+            'otp': '654321'
+        }, format='json')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('tokens', res.data)
+        self.assertIn('access', res.data['tokens'])
+        self.assertEqual(res.data['customer']['email'], 'farmer@demo.com')
 
     @patch('utils.auth.get_collection')
     def test_profile_with_jwt(self, mock_get_coll):

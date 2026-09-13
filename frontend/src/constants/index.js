@@ -4,8 +4,9 @@ export const SEGMENTS = {
   family_builders:   { label: 'Family Builder',   emoji: '👨‍👩‍👧', color: 'purple', desc: 'Married with children, education + health spends' },
   digital_natives:   { label: 'Digital Native',   emoji: '📱', color: 'cyan', desc: 'Heavy UPI usage, subscription services' },
   seasonal_earners:  { label: 'Farmer / Seasonal', emoji: '🌾', color: 'yellow', desc: 'Irregular income, crop-cycle patterns' },
-  stressed_accounts: { label: 'Needs Support',     emoji: '⚠️', color: 'red', desc: 'EMI bounces, declining balance' }
-};
+  stressed_accounts: { label: 'Needs Support',     emoji: '⚠️', color: 'red', desc: 'EMI bounces, declining balance' },
+  other:             { label: 'Other',              emoji: '◼',  color: 'gray', desc: 'Another income source' }
+}
 
 export const STRESS_COLORS = {
   GREEN:  { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-300', label: 'Financially Healthy', dot: 'bg-green-500' },

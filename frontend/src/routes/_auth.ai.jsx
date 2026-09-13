@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useDemoStore } from '../store/useDemoStore'
+import { useAuthStore } from '../store/authStore'
 import api from '../services/api'
 
 export const Route = createFileRoute('/_auth/ai')({
@@ -10,6 +11,7 @@ export const Route = createFileRoute('/_auth/ai')({
 function AIPage() {
   const navigate = useNavigate()
   const { activeProfile, canApplyForLoan } = useDemoStore()
+  const { customer } = useAuthStore()
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -46,7 +48,7 @@ function AIPage() {
       {
         id: 'init-1',
         sender: 'bot',
-        text: `Namaste ${activeProfile.name.split(' ')[0]} ji.\n\nI understand your complete financial picture as a ${activeProfile.displaySegment} with a stress index of ${activeProfile.stressScore}/100. How can I assist you today?`,
+        text: `Namaste ${activeProfile.name.split(' ')[0]} ji.\n\nI understand your complete financial picture as a ${activeProfile.displaySegment} with a stress index of ${Number(activeProfile.stressScore || 0).toFixed(2)}/100. How can I assist you today?`,
         quickReplies: [
           'Check my balance',
           'I need a loan',
@@ -100,7 +102,7 @@ function AIPage() {
     // Try Backend API First
     try {
       const res = await api.post('/chat/message/', {
-        customer_id: activeProfile.id,
+        customer_id: customer?.customer_id || activeProfile.id,
         message: userText,
         language: activeProfile.language,
       })
@@ -127,7 +129,7 @@ function AIPage() {
 
     if (isLoanQuery) {
       return {
-        text: `Based on your verified cash-flow stability and stress index of ${activeProfile.stressScore}/100, you are eligible for pre-approved credit.\n\nI can help you estimate the monthly EMI and guide you through transparent application steps.`,
+        text: `Based on your verified cash-flow stability and stress index of ${Number(activeProfile.stressScore || 0).toFixed(2)}/100, you are eligible for pre-approved credit.\n\nI can help you estimate the monthly EMI and guide you through transparent application steps.`,
         quickReplies: ['Calculate EMI', 'Show loan options', 'Apply now', 'Tell me more'],
         showEmiTool: true,
       }

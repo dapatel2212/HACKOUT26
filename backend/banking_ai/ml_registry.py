@@ -124,7 +124,7 @@ def predict_stress(features: dict) -> float:
     try:
         model = get_stress_model()
         row = np.array([[features.get(column, 0.0) for column in STRESS_MODEL_COLS]], dtype=float)
-        return float(np.clip(model.predict(row)[0], 0, 100))
+        return round(float(np.clip(model.predict(row)[0], 0, 100)), 2)
     except (FileNotFoundError, ImportError, ValueError, RuntimeError, OSError):
         return _formula_stress(features)
 
@@ -156,12 +156,12 @@ def _formula_stress(features: dict) -> float:
     behavior_score = (features["credit_utilization_ratio"] * 60) + (features["num_loan_inquiries"] * 12)
     anomaly_score = features.get("anomaly_rate_30d", 0) * 100
     sequence_score = min(100.0, features.get("recon_error", 0.0) * 25)
-    return float(np.clip(
+    return round(float(np.clip(
         0.30 * emi_score + 0.20 * spend_score + 0.20 * income_score
         + 0.12 * behavior_score + 0.10 * anomaly_score + 0.08 * sequence_score,
         0,
         100,
-    ))
+    )), 2)
 
 
 def rank_recommendations(features: dict, segment: str, stress_score: float) -> list[dict]:

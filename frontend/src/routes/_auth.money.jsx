@@ -18,8 +18,13 @@ export const Route = createFileRoute('/_auth/money')({
 })
 
 function MoneyPage() {
-  const { activeProfile } = useDemoStore()
+  const { activeProfile, isDemoMode } = useDemoStore()
   const { t } = useTranslation()
+  const isAssumed = !isDemoMode
+  const assumedStyle = isAssumed ? { opacity: 0.5 } : {}
+  const AssumedBadge = () => isAssumed ? (
+    <span className="ml-1.5 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700">Assumed</span>
+  ) : null
   const [range, setRange] = useState('3M')
   const [transactions, setTransactions] = useState([])
   const [trends, setTrends] = useState([])
@@ -81,8 +86,8 @@ function MoneyPage() {
           <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
             {t('dashboard.totalInflow', 'Total Inflow (Monthly)')}
           </span>
-          <div className="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">
-            ₹{monthlyIncome.toLocaleString('en-IN')}
+          <div className="text-2xl font-extrabold text-slate-900 dark:text-white mt-2" style={assumedStyle}>
+            ₹{monthlyIncome.toLocaleString('en-IN')}<AssumedBadge />
           </div>
           <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1 inline-block">
             {t('money.verifiedRegular', 'Verified Regular Cash Flow')}
@@ -93,8 +98,8 @@ function MoneyPage() {
           <span className="text-[11px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
             {t('dashboard.totalOutflow', 'Total Outflow (Monthly)')}
           </span>
-          <div className="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">
-            ₹{monthlyExpense.toLocaleString('en-IN')}
+          <div className="text-2xl font-extrabold text-slate-900 dark:text-white mt-2" style={assumedStyle}>
+            ₹{monthlyExpense.toLocaleString('en-IN')}<AssumedBadge />
           </div>
           <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1 inline-block">
             {t('money.essentials', 'Essentials + Obligations')}
@@ -105,11 +110,11 @@ function MoneyPage() {
           <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
             {t('dashboard.netSurplus', 'Net Monthly Surplus')}
           </span>
-          <div className="text-2xl font-extrabold text-indigo-900 dark:text-indigo-400 mt-2">
-            ₹{monthlySavings.toLocaleString('en-IN')}
+          <div className="text-2xl font-extrabold text-indigo-900 dark:text-indigo-400 mt-2" style={assumedStyle}>
+            ₹{monthlySavings.toLocaleString('en-IN')}<AssumedBadge />
           </div>
-          <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 mt-1 inline-block">
-            {activeProfile.savingsRate}% {t('dashboard.savingsRate', 'Savings Ratio')}
+          <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 mt-1 inline-block" style={assumedStyle}>
+            {activeProfile.savingsRate}% {t('dashboard.savingsRate', 'Savings Ratio')}<AssumedBadge />
           </span>
         </div>
 

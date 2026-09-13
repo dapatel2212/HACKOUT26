@@ -23,5 +23,10 @@ export const loanService = {
   async getStatus(applicationId) {
     const res = await api.get(`/loan/status/${applicationId}/`);
     return res.data;
+  },
+
+  async getCustomerLoans(customerId) {
+    const res = await api.get(`/loan/my-loans/${customerId}/`);
+    return res.data;
   }
 };

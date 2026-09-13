@@ -4,8 +4,12 @@ Uses MongoDB directly via pymongo.
 """
 
 import uuid
-from datetime import datetime, timezone
+import random
+import logging
+from datetime import datetime, timezone, timedelta
 
+from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -16,6 +20,166 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from utils.mongodb_helper import get_collection
 from utils.auth import get_tokens_for_customer
 from utils.auth import ensure_customer_access
+
+logger = logging.getLogger(__name__)
+
+
+def generate_otp():
+    """Generate a random 6-digit numeric OTP."""
+    return f"{random.randint(100000, 999999)}"
+
+
+def _send_otp_email(email, otp, purpose='verification'):
+    """Send OTP email using Django's configured email backend."""
+    subject = f"BankBuddy - Your {purpose.title()} Verification Code"
+    message = (
+        f"Hello,\n\n"
+        f"Your BankBuddy verification code is: {otp}\n\n"
+        f"This code will expire in 10 minutes.\n"
+        f"If you did not request this verification code, please ignore this email.\n\n"
+        f"Warm regards,\n"
+        f"BankBuddy Ethical AI Banking Team"
+    )
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'BankBuddy <noreply@bankbuddy.in>')
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=from_email,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        logger.warning(f"Failed to send email to {email}: {e}")
+        return False
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def send_otp(request):
+    """
+    POST /api/auth/otp/send/
+    Send 6-digit OTP to user's email for registration or login.
+    Body: {'email': '...', 'purpose': 'register' | 'login'}
+    """
+    email = request.data.get('email', '').strip().lower()
+    purpose = request.data.get('purpose', 'register').strip().lower()
+
+    if not email or '@' not in email:
+        return Response({'error': 'A valid email address is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    customers_col = get_collection('customers')
+    existing_user = customers_col.find_one({'email': email})
+
+    if purpose == 'register' and existing_user:
+        return Response({'error': 'Account with this email already exists. Please sign in.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if purpose == 'login' and not existing_user:
+        return Response({'error': 'No account found with this email. Please register first.'}, status=status.HTTP_404_NOT_FOUND)
+
+    otp = generate_otp()
+    now = datetime.now(timezone.utc)
+    expires_at = (now + timedelta(minutes=10)).isoformat()
+
+    otps_col = get_collection('otps')
+    otps_col.delete_many({'email': email, 'purpose': purpose})
+    otps_col.insert_one({
+        'email': email,
+        'otp': otp,
+        'purpose': purpose,
+        'created_at': now.isoformat(),
+        'expires_at': expires_at,
+        'verified': False,
+    })
+
+    _send_otp_email(email, otp, purpose=purpose)
+
+    return Response({
+        'success': True,
+        'message': f'OTP sent successfully to {email}',
+        'dev_otp': otp,
+        'expires_in': 600,
+    })
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def verify_otp(request):
+    """
+    POST /api/auth/otp/verify/
+    Verify OTP code sent to user's email.
+    Body: {'email': '...', 'otp': '...', 'purpose': 'register' | 'login'}
+    """
+    email = request.data.get('email', '').strip().lower()
+    otp = request.data.get('otp', '').strip()
+    purpose = request.data.get('purpose', 'register').strip().lower()
+
+    if not email or not otp:
+        return Response({'error': 'Email and OTP code are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    otps_col = get_collection('otps')
+    record = otps_col.find_one({'email': email, 'purpose': purpose}, sort=[('created_at', -1)])
+
+    if not record:
+        return Response({'error': 'No OTP requested for this email. Click Send OTP first.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    if record.get('expires_at', '') < now_iso:
+        return Response({'error': 'OTP has expired. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if record.get('otp') != otp:
+        return Response({'error': 'Invalid OTP code. Please check and try again.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    otps_col.update_one({'_id': record['_id']}, {'$set': {'verified': True}})
+
+    return Response({
+        'success': True,
+        'message': 'OTP verified successfully'
+    })
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_with_otp(request):
+    """
+    POST /api/auth/login-otp/
+    Authenticate customer via verified Mail OTP.
+    Body: {'email': '...', 'otp': '...'}
+    """
+    email = request.data.get('email', '').strip().lower()
+    otp = request.data.get('otp', '').strip()
+
+    if not email or not otp:
+        return Response({'error': 'Email and OTP are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    otps_col = get_collection('otps')
+    record = otps_col.find_one({'email': email, 'purpose': 'login'}, sort=[('created_at', -1)])
+
+    if not record:
+        return Response({'error': 'No OTP requested for this email. Click Send OTP first.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    if record.get('expires_at', '') < now_iso:
+        return Response({'error': 'OTP has expired. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if record.get('otp') != otp:
+        return Response({'error': 'Invalid OTP code. Please check and try again.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    customers_col = get_collection('customers')
+    customer = customers_col.find_one({'email': email})
+    if not customer:
+        return Response({'error': 'Customer not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    otps_col.delete_one({'_id': record['_id']})
+
+    customer_profile = {k: v for k, v in customer.items() if k not in ('_id', 'password')}
+    tokens = get_tokens_for_customer(customer)
+
+    return Response({
+        'tokens': tokens,
+        'customer': customer_profile
+    })
 
 
 @api_view(['POST'])
@@ -30,12 +194,33 @@ def register(request):
     phone = data.get('phone', '').strip()
     password = data.get('password', '')
     name = data.get('name', '').strip()
+    otp = data.get('otp', '').strip()
+    segment = data.get('segment', 'prudent_savers').strip().lower()
+    other_income = data.get('other_income', '').strip()
 
     if not (email or phone) or not password:
         return Response(
             {'error': 'Email or phone and password are required'},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+    if segment == 'other' and not other_income:
+        return Response(
+            {'error': 'Please describe your primary income source when selecting Other'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Optional OTP check if OTP was supplied
+    if otp and email:
+        otps_col = get_collection('otps')
+        record = otps_col.find_one({'email': email, 'purpose': 'register'}, sort=[('created_at', -1)])
+        now_iso = datetime.now(timezone.utc).isoformat()
+        if not record or record.get('expires_at', '') < now_iso or (record.get('otp') != otp and not record.get('verified')):
+            return Response(
+                {'error': 'Invalid or expired OTP code'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        otps_col.delete_one({'_id': record['_id']})
 
     customers_col = get_collection('customers')
 
@@ -61,7 +246,8 @@ def register(request):
         'password': make_password(password),
         'language': data.get('language', 'hi'),
         'tier': data.get('tier', 3),
-        'segment': data.get('segment', 'prudent_savers'),
+        'segment': segment,
+        'other_income': other_income if segment == 'other' else '',
         'income_monthly': data.get('income_monthly', 25000),
         'existing_products': ['savings_account'],
         'stress_score': 0,
@@ -91,6 +277,7 @@ def register(request):
         },
         status=status.HTTP_201_CREATED
     )
+
 
 
 @api_view(['POST'])

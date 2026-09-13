@@ -17,6 +17,7 @@ import { useDemoStore } from '../store/useDemoStore'
 import { getDashboardData, getMoneyFlowTrends } from '../services/mockAdapters'
 import { stressService } from '../services/stressService'
 import { customerService } from '../services/customerService'
+import { useAuthStore } from '../store/authStore'
 
 export const Route = createFileRoute('/_auth/dashboard')({
   component: DashboardPage,
@@ -63,7 +64,15 @@ const PIE_CATEGORIES = {
 }
 
 function DashboardPage() {
-  const { activeProfile } = useDemoStore()
+  const { activeProfile, isDemoMode } = useDemoStore()
+
+  // For new (non-demo) users, flag values as assumed/placeholder
+  const isAssumed = !isDemoMode
+  const assumedStyle = isAssumed ? { opacity: 0.5 } : {}
+  const AssumedBadge = () => isAssumed ? (
+    <span className="ml-1.5 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700">Assumed</span>
+  ) : null
+  const { customer } = useAuthStore()
   const { t } = useTranslation()
 
   const [data, setData] = useState(null)
@@ -73,37 +82,67 @@ function DashboardPage() {
   const [trendData, setTrendData] = useState([])
 
   useEffect(() => {
+    let isMounted = true
     setLoading(true)
     const loadDashboard = async () => {
-      const localData = await getDashboardData(activeProfile.id)
-      const token = localStorage.getItem('access_token')
-      if (token && activeProfile.id?.startsWith('CUST_')) {
-        const [profile, stress] = await Promise.all([
-          customerService.getCustomer(activeProfile.id),
-          stressService.getStatus(activeProfile.id),
-        ])
-        setData({
-          ...localData,
-          name: profile.name,
-          segment: profile.segment || localData.segment,
-          balance: profile.balance ?? localData.balance,
-          monthlyIncome: profile.income_monthly ?? localData.monthlyIncome,
-          stressScore: stress.stress_score,
-          status: stress.stress_level,
-        })
-      } else {
-        setData(localData)
-      }
-      setTrendData(getMoneyFlowTrends(activeProfile.id, trendRange))
-      setLoading(false)
-    }
-    loadDashboard().catch(() => {
-      setData(null)
-      setLoading(false)
-    })
-  }, [activeProfile.id, trendRange])
+      const customerId = customer?.customer_id
+      const profileId = activeProfile?.id || customerId || 'ramesh'
+      const localData = await getDashboardData(profileId)
+      let mergedData = { ...localData }
 
-  if (loading || !data) {
+      const token = localStorage.getItem('access_token')
+      if (token && customerId) {
+        try {
+          const [profile, stress] = await Promise.all([
+            customerService.getCustomer(customerId).catch(() => null),
+            stressService.getStatus(customerId).catch(() => null),
+          ])
+          if (profile) {
+            mergedData = {
+              ...mergedData,
+              name: profile.name || mergedData.name,
+              segment: profile.segment || mergedData.segment,
+              balance: profile.balance ?? mergedData.balance,
+              monthlyIncome: profile.income_monthly ?? mergedData.monthlyIncome,
+            }
+          }
+          if (stress) {
+            mergedData = {
+              ...mergedData,
+              stressScore: stress.stress_score ?? mergedData.stressScore,
+              status: stress.stress_level || mergedData.status,
+            }
+          }
+        } catch (err) {
+          console.warn('Backend fetch failed, using fallback:', err)
+        }
+      }
+
+      if (isMounted) {
+        setData(mergedData)
+        setTrendData(getMoneyFlowTrends(profileId, trendRange))
+        setLoading(false)
+      }
+    }
+
+    loadDashboard().catch((err) => {
+      console.error('Error loading dashboard:', err)
+      if (isMounted) {
+        getDashboardData(activeProfile?.id || 'ramesh').then((fallback) => {
+          if (isMounted) {
+            setData(fallback)
+            setLoading(false)
+          }
+        })
+      }
+    })
+
+    return () => {
+      isMounted = false
+    }
+  }, [activeProfile?.id, customer?.customer_id, trendRange])
+
+  if (loading) {
     return (
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="h-32 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 animate-pulse"></div>
@@ -116,8 +155,21 @@ function DashboardPage() {
     )
   }
 
-  const isStressed = data.stressScore > 30
-  const rawPieBreakdown = PIE_CATEGORIES[data.segment] || PIE_CATEGORIES.seasonal_earners
+  const activeData = data || {
+    name: activeProfile?.name || 'Customer',
+    segment: activeProfile?.segment || 'seasonal_earners',
+    balance: activeProfile?.balance || 0,
+    monthlyIncome: activeProfile?.monthlyIncome || 0,
+    savingsRate: activeProfile?.savingsRate || 0,
+    wellnessScore: activeProfile?.wellnessScore || 50,
+    stressScore: activeProfile?.stressScore || 0,
+    status: activeProfile?.status || 'GREEN',
+    nextEmi: activeProfile?.upcomingEmi || 0,
+    recommendedThemes: activeProfile?.recommendedThemes || [],
+  }
+
+  const isStressed = activeData.stressScore > 30
+  const rawPieBreakdown = PIE_CATEGORIES[activeData.segment] || PIE_CATEGORIES.seasonal_earners
   const pieBreakdown = rawPieBreakdown.map((item) => ({
     ...item,
     name: t(`pie.${item.name}`, item.name),
@@ -137,7 +189,7 @@ function DashboardPage() {
                 Let's strengthen your finances first.
               </h2>
               <p className="text-xs text-amber-800 dark:text-amber-300 mt-1 max-w-2xl leading-relaxed">
-                Your current financial stress score is {data.stressScore}/100. To prevent unsustainable debt accumulation, new borrowing recommendations are paused. We offer zero-cost relief options instead.
+                Your current financial stress score is {Number(activeData.stressScore || 0).toFixed(2)}/100. To prevent unsustainable debt accumulation, new borrowing recommendations are paused. We offer zero-cost relief options instead.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -174,16 +226,17 @@ function DashboardPage() {
             </button>
           </div>
           <div className="my-4">
-            <div className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-              {showBalance ? `₹${data.balance.toLocaleString('en-IN')}` : '••••••••'}
+            <div className="text-3xl sm:text-4xl font-extrabold tracking-tight" style={assumedStyle}>
+              {showBalance ? `₹${(activeData.balance || 0).toLocaleString('en-IN')}` : '••••••••'}
+              <AssumedBadge />
             </div>
             <div className="text-xs text-indigo-200 dark:text-slate-400 mt-1">
-              Main Primary Account &bull; Verified
+              Main Primary Account &bull; {isAssumed ? 'No transaction data yet' : 'Verified'}
             </div>
           </div>
           <div className="pt-3 border-t border-indigo-800 dark:border-slate-800 flex justify-between text-xs">
             <span className="text-indigo-200 dark:text-slate-400">{t('dashboard.monthlyIncome', 'Monthly Income')}</span>
-            <span className="font-bold">₹{data.monthlyIncome.toLocaleString('en-IN')}</span>
+            <span className="font-bold" style={assumedStyle}>₹{(activeData.monthlyIncome || 0).toLocaleString('en-IN')}<AssumedBadge /></span>
           </div>
         </div>
 
@@ -194,32 +247,33 @@ function DashboardPage() {
               {t('dashboard.wellnessIndex', 'Wellness Index')}
             </span>
             <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-              {data.status} Status
+              {activeData.status} Status
             </span>
           </div>
           <div className="my-3">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-2" style={assumedStyle}>
               <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-                {data.wellnessScore}
+                {activeData.wellnessScore}
               </span>
               <span className="text-sm font-semibold text-slate-400">/ 100</span>
+              <AssumedBadge />
             </div>
             <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full mt-3 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
-                  data.wellnessScore >= 70
+                  activeData.wellnessScore >= 70
                     ? 'bg-green-600'
-                    : data.wellnessScore >= 45
+                    : activeData.wellnessScore >= 45
                     ? 'bg-yellow-500'
                     : 'bg-red-500'
                 }`}
-                style={{ width: `${data.wellnessScore}%` }}
+                style={{ width: `${activeData.wellnessScore}%` }}
               ></div>
             </div>
           </div>
           <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs">
             <span className="text-slate-500 dark:text-slate-400">Savings Rate</span>
-            <span className="font-bold text-slate-800 dark:text-slate-200">{data.savingsRate}% of Income</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200" style={assumedStyle}>{activeData.savingsRate}% of Income<AssumedBadge /></span>
           </div>
         </div>
 
@@ -241,10 +295,11 @@ function DashboardPage() {
           </div>
           <div className="my-3">
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-                {data.stressScore}
+              <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white" style={assumedStyle}>
+                {Number(activeData.stressScore || 0).toFixed(2)}
               </span>
               <span className="text-sm font-semibold text-slate-400">/ 100</span>
+              <AssumedBadge />
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
               {!isStressed
@@ -418,7 +473,7 @@ function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {data.recommendedThemes.map((themeName, idx) => (
+          {(activeData.recommendedThemes || []).map((themeName, idx) => (
             <div
               key={themeName}
               className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-850 flex flex-col justify-between"

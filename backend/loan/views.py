@@ -109,10 +109,27 @@ def loan_apply(request):
         return Response({'error': 'Loan amount and tenure must be positive'}, status=status.HTTP_400_BAD_REQUEST)
 
     cust = get_collection('customers').find_one({'customer_id': customer_id})
-    if not cust:
-        return Response({'error': 'Customer not found'}, status=status.HTTP_404_NOT_FOUND)
-    stress_score = predict_stress(customer_features_for_customer(cust))
+    if cust:
+        stress_score = predict_stress(customer_features_for_customer(cust))
+    else:
+        # New customer with no data — default to 0 stress (no blocking)
+        stress_score = 0
     if stress_score > STRESS_LOAN_BLOCK_THRESHOLD:
+        app_id = f"LN_{uuid.uuid4().hex[:8].upper()}"
+        now = datetime.now(timezone.utc).isoformat()
+        rejected_doc = {
+            'application_id': app_id,
+            'customer_id': customer_id,
+            'product_name': data.get('product_name', 'Personal Loan'),
+            'amount': amount,
+            'tenure_months': tenure,
+            'monthly_emi': round((amount * 0.00958 * (1.00958**tenure)) / ((1.00958**tenure) - 1), 2) if tenure > 0 else 0,
+            'status': 'REJECTED',
+            'rejection_reason': 'Ethical AI Guardrail: Financial stress score exceeds safety threshold.',
+            'stress_score': stress_score,
+            'created_at': now
+        }
+        get_collection('loans').insert_one(rejected_doc)
         log_decision(customer_id, 'loan_application_blocked_guardrail', {'stress_score': stress_score})
         return Response({
             'error': 'Application blocked by ethical AI guardrail due to elevated financial stress.'
@@ -124,9 +141,11 @@ def loan_apply(request):
     loan_doc = {
         'application_id': app_id,
         'customer_id': customer_id,
+        'product_name': data.get('product_name', 'Personal Loan'),
         'amount': amount,
         'tenure_months': tenure,
-        'status': 'PENDING_REVIEW',
+        'monthly_emi': round((amount * 0.00958 * (1.00958**tenure)) / ((1.00958**tenure) - 1), 2) if tenure > 0 else 0,
+        'status': 'PENDING',
         'stress_score': stress_score,
         'created_at': now
     }
@@ -145,3 +164,152 @@ def loan_status(request, application_id):
         return Response({'error': 'Loan application not found'}, status=status.HTTP_404_NOT_FOUND)
     ensure_customer_access(request, loan.get('customer_id'))
     return Response(loan)
+
+
+DEFAULT_DEMO_LOANS = {
+    'CUST_DEMO_001': [
+        {
+            'application_id': 'LN_KCC_8810',
+            'customer_id': 'CUST_DEMO_001',
+            'product_name': 'Kisan Crop Credit Loan',
+            'amount': 75000,
+            'tenure_months': 12,
+            'monthly_emi': 6640,
+            'status': 'ACCEPTED',
+            'created_at': '2026-01-15T10:00:00Z',
+            'category': 'Agriculture'
+        },
+        {
+            'application_id': 'LN_EQ_9921',
+            'customer_id': 'CUST_DEMO_001',
+            'product_name': 'Solar Pump & Equipment Loan',
+            'amount': 50000,
+            'tenure_months': 24,
+            'monthly_emi': 2340,
+            'status': 'ACCEPTED',
+            'created_at': '2026-05-02T14:30:00Z',
+            'category': 'Equipment'
+        }
+    ],
+    'CUST_DEMO_002': [
+        {
+            'application_id': 'LN_PL_4420',
+            'customer_id': 'CUST_DEMO_002',
+            'product_name': 'Pre-Approved Personal Loan',
+            'amount': 150000,
+            'tenure_months': 36,
+            'monthly_emi': 4950,
+            'status': 'ACCEPTED',
+            'created_at': '2025-11-10T09:15:00Z',
+            'category': 'Personal'
+        },
+        {
+            'application_id': 'LN_VL_3104',
+            'customer_id': 'CUST_DEMO_002',
+            'product_name': 'Electric Vehicle Loan',
+            'amount': 80000,
+            'tenure_months': 24,
+            'monthly_emi': 3740,
+            'status': 'ACCEPTED',
+            'created_at': '2026-02-18T11:45:00Z',
+            'category': 'Vehicle'
+        }
+    ],
+    'CUST_DEMO_003': [
+        {
+            'application_id': 'LN_WC_7712',
+            'customer_id': 'CUST_DEMO_003',
+            'product_name': 'Working Capital Merchant Overdraft',
+            'amount': 100000,
+            'tenure_months': 12,
+            'monthly_emi': 8850,
+            'status': 'ACCEPTED',
+            'created_at': '2026-03-04T16:20:00Z',
+            'category': 'Business'
+        },
+        {
+            'application_id': 'LN_EM_5091',
+            'customer_id': 'CUST_DEMO_003',
+            'product_name': 'Inventory Expansion Loan',
+            'amount': 60000,
+            'tenure_months': 18,
+            'monthly_emi': 3640,
+            'status': 'PENDING',
+            'created_at': '2026-08-20T13:10:00Z',
+            'category': 'Business'
+        }
+    ],
+    'CUST_DEMO_004': [
+        {
+            'application_id': 'LN_TW_6615',
+            'customer_id': 'CUST_DEMO_004',
+            'product_name': 'Two-Wheeler Vehicle Loan',
+            'amount': 45000,
+            'tenure_months': 12,
+            'monthly_emi': 3980,
+            'status': 'ACCEPTED',
+            'created_at': '2025-12-12T08:30:00Z',
+            'category': 'Vehicle'
+        },
+        {
+            'application_id': 'LN_MB_2209',
+            'customer_id': 'CUST_DEMO_004',
+            'product_name': 'Instant Micro-Credit',
+            'amount': 15000,
+            'tenure_months': 6,
+            'monthly_emi': 2580,
+            'status': 'PENDING',
+            'created_at': '2026-07-01T15:00:00Z',
+            'category': 'Microfinance'
+        }
+    ],
+    'CUST_DEMO_005': [
+        {
+            'application_id': 'LN_ST_1102',
+            'customer_id': 'CUST_DEMO_005',
+            'product_name': 'Emergency Household Loan',
+            'amount': 30000,
+            'tenure_months': 12,
+            'monthly_emi': 2650,
+            'status': 'ACCEPTED',
+            'created_at': '2026-04-14T10:30:00Z',
+            'category': 'Personal'
+        },
+        {
+            'application_id': 'LN_AP_9043',
+            'customer_id': 'CUST_DEMO_005',
+            'product_name': 'Additional Personal Credit',
+            'amount': 50000,
+            'tenure_months': 24,
+            'monthly_emi': 2340,
+            'status': 'REJECTED',
+            'rejection_reason': 'Ethical AI Guardrail: Stress score 72.00 exceeds threshold (50)',
+            'created_at': '2026-09-05T17:40:00Z',
+            'category': 'Personal'
+        }
+    ]
+}
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def customer_loans(request, customer_id):
+    """
+    GET /api/loan/my-loans/{customer_id}/
+    Returns list of loan applications and historical loans for the customer.
+    """
+    ensure_customer_access(request, customer_id)
+    db_loans = list(get_collection('loans').find({'customer_id': customer_id}, {'_id': 0}).sort('created_at', -1))
+    
+    defaults = DEFAULT_DEMO_LOANS.get(customer_id, [])
+    db_app_ids = {l['application_id'] for l in db_loans if 'application_id' in l}
+    combined = db_loans + [d for d in defaults if d['application_id'] not in db_app_ids]
+    
+    for loan in combined:
+        if loan.get('status') == 'PENDING_REVIEW':
+            loan['status'] = 'PENDING'
+        elif loan.get('status') == 'APPROVED':
+            loan['status'] = 'ACCEPTED'
+
+    return Response({'customer_id': customer_id, 'loans': combined})
+

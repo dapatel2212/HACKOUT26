@@ -23,6 +23,19 @@ from banking_ai.ml_registry import (
 from utils.auth import ensure_customer_access
 
 RECOMMENDATIONS_CATALOG = {
+    'other': [
+        {
+            'product_id': 'financial_health_check',
+            'product_name': 'Personalized Financial Health Check',
+            'category': 'planning',
+            'score': 0.8,
+            'match_score_pct': 80,
+            'description': 'Review your income pattern and goals with a tailored banking plan.',
+            'shap_explanation': [
+                {'text': 'Income source provided by the customer', 'contribution': '+', 'direction': 'positive'}
+            ]
+        }
+    ],
     'seasonal_earners': [
         {
             'product_id': 'weather_insurance',

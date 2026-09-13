@@ -104,7 +104,7 @@ function AuthLayout() {
                   : 'bg-red-100 dark:bg-red-950/70 text-red-700 dark:text-red-400'
               }`}
             >
-              {t('header.stress', 'Stress')} {activeProfile.stressScore}
+              {t('header.stress', 'Stress')} {Number(activeProfile.stressScore || 0).toFixed(2)}
             </span>
           </div>
 

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useDemoStore } from '../store/useDemoStore'
 import { getRecommendationsData } from '../services/mockAdapters'
 import { recommendationService } from '../services/recommendationService'
+import { useAuthStore } from '../store/authStore'
 
 export const Route = createFileRoute('/_auth/recommendations')({
   component: RecommendationsPage,
@@ -13,6 +14,7 @@ function RecommendationsPage() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { activeProfile, canApplyForLoan } = useDemoStore()
+  const { customer } = useAuthStore()
   const [recommendations, setRecommendations] = useState([])
   const [dismissedIds, setDismissedIds] = useState([])
   const [expandedWhyId, setExpandedWhyId] = useState(null)
@@ -22,9 +24,10 @@ function RecommendationsPage() {
     let cancelled = false
     const loadRecommendations = async () => {
       const token = localStorage.getItem('access_token')
-      const isBackendCustomer = Boolean(token && activeProfile.id?.startsWith('CUST_'))
+      const customerId = customer?.customer_id
+      const isBackendCustomer = Boolean(token && customerId)
       const data = isBackendCustomer
-        ? await recommendationService.getRecommendations(activeProfile.id)
+        ? await recommendationService.getRecommendations(customerId)
         : { recommendations: getRecommendationsData(activeProfile.id) }
       const normalized = (data.recommendations || []).map((item) => ({
         id: item.product_id || item.id,
@@ -53,7 +56,7 @@ function RecommendationsPage() {
     return () => {
       cancelled = true
     }
-  }, [activeProfile.id])
+  }, [activeProfile.id, customer?.customer_id])
 
   const handleDismiss = (id) => {
     setDismissedIds((prev) => [...prev, id])
@@ -224,13 +227,7 @@ function RecommendationsPage() {
                     {isExpanded ? 'Hide Factor Breakdown' : t('recommendations.whyThis', 'Why this recommendation?')}
                   </button>
 
-                  <button
-                    onClick={() => handleAction(rec)}
-                    className="px-4 py-2 text-xs font-bold rounded-xl bg-indigo-900 hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white transition shadow-sm"
-                  >
-                    {translatedActionLabel}
-                  </button>
-                </div>
+                                </div>
               </div>
             )
           })}

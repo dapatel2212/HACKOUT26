@@ -68,9 +68,26 @@ const HISTORICAL_TREND = [
 ]
 
 function WellnessPage() {
-  const { activeProfile } = useDemoStore()
+  const { activeProfile, isDemoMode } = useDemoStore()
   const { t } = useTranslation()
-  const rawRadarData = RADAR_DATA_SETS[activeProfile.segment] || RADAR_DATA_SETS.seasonal_earners
+  const isAssumed = !isDemoMode
+  const assumedStyle = isAssumed ? { opacity: 0.5 } : {}
+  const AssumedBadge = () => isAssumed ? (
+    <span className="ml-1.5 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700">Assumed</span>
+  ) : null
+
+  const newAccountRadar = [
+    { subject: 'Savings', score: 0, fullMark: 100 },
+    { subject: 'Debt Safety', score: 100, fullMark: 100 },
+    { subject: 'Cash Flow', score: 0, fullMark: 100 },
+    { subject: 'Protection', score: 0, fullMark: 100 },
+    { subject: 'Planning', score: 50, fullMark: 100 },
+  ]
+
+  const rawRadarData = isDemoMode
+    ? (RADAR_DATA_SETS[activeProfile.segment] || RADAR_DATA_SETS.seasonal_earners)
+    : newAccountRadar
+
   const radarData = rawRadarData.map((item) => ({
     ...item,
     subject: t(`wellness.radar.${item.subject}`, item.subject),
@@ -110,8 +127,8 @@ function WellnessPage() {
           </div>
 
           <div className="my-4">
-            <div className="text-4xl font-extrabold text-slate-900 dark:text-white font-mono">
-              {activeProfile.wellnessScore} <span className="text-sm font-normal text-slate-400">/ 100</span>
+            <div className="text-4xl font-extrabold text-slate-900 dark:text-white font-mono" style={assumedStyle}>
+              {activeProfile.wellnessScore} <span className="text-sm font-normal text-slate-400">/ 100</span><AssumedBadge />
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Based on savings buffer, debt obligations, and cash volatility.
@@ -145,8 +162,8 @@ function WellnessPage() {
           </div>
 
           <div className="my-4">
-            <div className="text-4xl font-extrabold text-slate-900 dark:text-white font-mono">
-              {activeProfile.stressScore} <span className="text-sm font-normal text-slate-400">/ 100</span>
+            <div className="text-4xl font-extrabold text-slate-900 dark:text-white font-mono" style={assumedStyle}>
+              {Number(activeProfile.stressScore || 0).toFixed(2)} <span className="text-sm font-normal text-slate-400">/ 100</span><AssumedBadge />
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               {!isStressed
@@ -171,8 +188,8 @@ function WellnessPage() {
           </span>
 
           <div className="my-4">
-            <div className="text-4xl font-extrabold text-indigo-900 dark:text-indigo-400 font-mono">
-              {isStressed ? '0.4 Months' : '3.8 Months'}
+            <div className="text-4xl font-extrabold text-indigo-900 dark:text-indigo-400 font-mono" style={assumedStyle}>
+              {isDemoMode ? (isStressed ? '0.4 Months' : '3.8 Months') : '0.0 Months'}<AssumedBadge />
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Ideal benchmark: 6.0 months of mandatory recurring expenses.
